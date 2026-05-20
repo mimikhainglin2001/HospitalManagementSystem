@@ -1,0 +1,16 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+<h1>Home</h1>
+
+<AuthorizeView>
+    <Authorized>
+        <h3 style="color:green">Logged In</h3>
+    </Authorized>
+
+    <NotAuthorized>
+        <h3 style="color:red">Not Logged In</h3>
+    </NotAuthorized>
+</AuthorizeView>
