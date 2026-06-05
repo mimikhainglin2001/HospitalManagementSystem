@@ -80,6 +80,7 @@ builder.Services.AddScoped<ISystemCodeRepository, SystemCodeRepository>();
 builder.Services.AddScoped<ISystemCodeDetailsRepository, SystemCodeDetailsRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddMudServices();
 var app = builder.Build();
 

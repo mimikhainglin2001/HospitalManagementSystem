@@ -1,0 +1,123 @@
+@page "/users"
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@attribute [Authorize]
+@attribute [StreamRendering]
+@using MudBlazor
+<MudCard Elevation="3">
+
+    <MudCardHeader>
+        <MudText Typo="Typo.h6">System Users List</MudText>
+        <MudSpacer />
+        <MudButton Href="/adduser"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add User
+        </MudButton>
+    </MudCardHeader>
+
+    <MudDivider />
+
+   <MudTable Elevation="28" Items="SystemUsersList" Filter = "new Func<ApplicationUser, bool>(Search)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">System Users List</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchstring" Placeholder="Search For System Users..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(u => u.Id)"></MudTableSortLabel>ID</MudTh>
+        <MudTh>Full Name</MudTh>
+        <MudTh>User Name</MudTh>
+        <MudTh>Email Address</MudTh>
+        <MudTh>Phone Number</MudTh>
+        <MudTh>Gender</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+<RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="FullName">@context.FullName</MudTd>
+        <MudTd DataLabel="UserName">@context.UserName</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+        <MudTd DataLabel="Gender">@context.Gender</MudTd>
+    <MudTd DataLabel="Actions">
+<MudStack row = "true">
+    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   OnClick="@(() => Edit(context.Id))" />
+
+    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                   Color="Color.Error"
+                   Size="Size.Small"
+                   OnClick="@(() => Delete(context.Id))" />
+</MudStack>
+</MudTd>
+</RowTemplate>
+<PagerContent>
+    <MudTablePager PageSizeOptions="new int[]{5,10,20, 50, 100}" />
+</PagerContent>
+   </MudTable>
+
+</MudCard>
+
+@code {
+
+    private List<ApplicationUser> SystemUsersList { get; set; }= new();
+    private string? UserId;
+    public ApplicationUser systemUser = new();
+    public string searchstring = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+    SystemUsersList = await GetAllSystemUsers();
+    }
+
+    private async Task <List<ApplicationUser>> GetAllSystemUsers()
+    {
+        SystemUsersList = await userService.GetUsersAsync() ?? new();
+        return SystemUsersList;
+    }
+    private async void Edit(string id)
+    {
+        systemUser = await userService.GetUserByIdAsync(id) ?? new();
+    }
+    private async void Delete(string id)
+    {
+        systemUser = await userService.DeleteUserAsync(id) ?? new();
+    }
+    private bool Search(ApplicationUser user)
+    {
+       if (string.IsNullOrWhiteSpace(searchstring))
+            return true;
+
+        return user.FirstName.Contains(searchstring, StringComparison.OrdinalIgnoreCase) ||
+               user.UserName.Contains(searchstring, StringComparison.OrdinalIgnoreCase) ||
+               user.FullName.Contains(searchstring, StringComparison.OrdinalIgnoreCase);
+    }
+    private bool FilterFunction(ApplicationUser user)
+    {
+        if (string.IsNullOrWhiteSpace(searchstring))
+            return true;
+        if (user.FirstName.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (user.FullName.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}
