@@ -1,53 +1,78 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthStateProvider
-<div class="top-row ps-3 navbar navbar-dark">
+
+<div class="top-row navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">HMIS_SYSTEM</a>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable">
     <nav class="nav flex-column">
 
-    <AuthorizeView>
-    <Authorized>
-        @* <a href="/Identity/Account/Logout">Logout</a> *@
-    </Authorized>
+        <!-- Home -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill"></span>
+                Home
+            </NavLink>
+        </div>
 
-    <NotAuthorized>
-        @* <a href="/Identity/Account/Login">Login</a>
-        <a href="/Identity/Account/Register">Register</a> *@
-    </NotAuthorized>
-</AuthorizeView>
+        <!-- System Codes -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="systemcodes">
+                <span class="bi bi-gear-fill"></span>
+                System Codes
+            </NavLink>
+        </div>
 
-    <div class="nav-item px-3">
-        <NavLink class="nav-link" href="">
-            Home
-        </NavLink>
-    </div>
+        <!-- Code Details -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="systemcodedetails">
+                <span class="bi bi-card-list"></span>
+                Code Details
+            </NavLink>
+        </div>
 
-    <div class="nav-item px-3">
-        <NavLink class="nav-link" href="systemcodes">
-            System Code
-        </NavLink>
-    </div>
-<div class="nav-item px-3">
-        <NavLink class="nav-link" href="systemcodedetails">
-            System Code Details
-        </NavLink>
-    </div>
-    <div class="nav-item px-3">
-        <NavLink class="nav-link" href="weather">
-            Weather
-        </NavLink>
-    </div>
-        <div class="nav-item px-3">
+        <!-- Departments -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="departments">
+                <span class="bi bi-building"></span>
+                Departments
+            </NavLink>
+        </div>
 
-    <NavLink class="nav-link" href="/Identity/Account/Login">Login</NavLink>
-<NavLink class="nav-link" href="/Identity/Account/Register">Register</NavLink>
+        <!-- Countries -->
+        <div class="nav-item">
+            <NavLink class="nav-link" href="countries">
+                <span class="bi bi-globe2"></span>
+                Countries
+            </NavLink>
+        </div>
+
+        <!-- Auth Section -->
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item">
+                    <div class="nav-link text-white-50">
+                        <span class="bi bi-person-circle"></span>
+                        @context.User.Identity?.Name
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="/Identity/Account/Logout">
+                        <span class="bi bi-box-arrow-right"></span>
+                        Logout
+                    </a>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="/Identity/Account/Login">
+                        <span class="bi bi-box-arrow-in-right"></span>
+                        Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </nav>
 </div>
-</nav>
-</div>
-

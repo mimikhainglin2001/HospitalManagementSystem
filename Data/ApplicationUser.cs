@@ -11,6 +11,7 @@ public class ApplicationUser : IdentityUser
 
         [Display(Name = "First Name")]
     public string LastName { get; set; }
+    public string FullName => $"{FirstName} {LastName}";
 
         [Display(Name = "Address")]
     public string Address { get; set; }

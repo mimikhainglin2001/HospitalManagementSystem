@@ -1,63 +1,144 @@
 @page "/systemcodedetails"
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@attribute [Authorize]
 @attribute [StreamRendering]
+@using MudBlazor
 
-<PageTitle>System Code Details List</PageTitle>
+<MudCard Elevation="3">
 
-<h1>System Code Details List</h1>
+    <MudCardHeader>
+        <MudText Typo="Typo.h6">System Code Details</MudText>
+        <MudSpacer />
+        <MudButton Href="/addsystemcodedetails"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add Details
+        </MudButton>
+    </MudCardHeader>
 
+    <MudDivider />
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th aria-label="Temperature in Celsius">Temp. (C)</th>
-                <th aria-label="Temperature in Fahrenheit">Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <MudTable Elevation="25"
+              Items="systemCodeDetails"
+              Filter="Search">
+
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">System Code Details List</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchstring"
+                          Placeholder="Search..."
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium"
+                          Class="mt-0" />
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh>Code</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Parent Code</MudTh>
+            <MudTh>Order No</MudTh>
+            <MudTh>Created By</MudTh>
+            <MudTh>Created On</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
+
+            <MudTd DataLabel="Description">
+                @context.Description
+            </MudTd>
+
+            <MudTd DataLabel="Parent Code">
+                @context.SystemCode?.Code
+            </MudTd>
+
+            <MudTd DataLabel="Order No">
+                @context.OrderNo
+            </MudTd>
+
+            <MudTd DataLabel="Created By">
+                @context.CreatedBy?.FullName
+            </MudTd>
+
+            <MudTd DataLabel="Created On">
+                @context.CreatedOn.ToString("yyyy-MM-dd")
+            </MudTd>
+
+            <MudTd DataLabel="Actions">
+
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               OnClick="@(() => Edit(context.Id))" />
+
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               Size="Size.Small"
+                               OnClick="@(() => Delete(context.Id))" />
+
+            </MudTd>
+        </RowTemplate>
+
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+        </PagerContent>
+
+    </MudTable>
+
+</MudCard>
 
 @code {
-    private WeatherForecast[]? forecasts;
+
+    public string searchstring = "";
+
+    private List<SystemCodeDetail> systemCodeDetails { get; set; } = new();
+
+    private string? UserId;
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        if (user.Identity?.IsAuthenticated == true)
         {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        systemCodeDetails =
+            await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
     }
 
-    private class WeatherForecast
+    private void Edit(int id)
     {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        navigation.NavigateTo($"/addsystemcodedetails/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+        await systemCodeDetailsService.DeleteSystemCodeDetailAsync(id);
+        systemCodeDetails =
+            await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
+    }
+
+    private bool Search(SystemCodeDetail item)
+    {
+        if (string.IsNullOrWhiteSpace(searchstring))
+            return true;
+
+        return (item.Code?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true)
+            || (item.Description?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true)
+            || (item.SystemCode?.Code?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true);
     }
 }
