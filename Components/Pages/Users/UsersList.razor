@@ -9,11 +9,10 @@
 @inject NavigationManager navigation
 @attribute [Authorize]
 @attribute [StreamRendering]
-@using MudBlazor
+@using MudBlazor 
 <MudCard Elevation="3">
 
     <MudCardHeader>
-        <MudText Typo="Typo.h6">System Users List</MudText>
         <MudSpacer />
         <MudButton Href="/adduser"
                    Variant="Variant.Filled"
@@ -59,7 +58,7 @@
                    Size="Size.Small"
                    OnClick="@(() => Delete(context.Id))" />
 </MudStack>
-</MudTd>
+</MudTd> 
 </RowTemplate>
 <PagerContent>
     <MudTablePager PageSizeOptions="new int[]{5,10,20, 50, 100}" />

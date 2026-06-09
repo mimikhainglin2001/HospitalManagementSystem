@@ -8,14 +8,31 @@
 
 @* Needed for snackbars *@
 <MudSnackbarProvider />
-<div class="page">
+<div class="page"> 
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="top-row auth px-4">
+            <div class="top-search">
+                <input type="search" placeholder="Search..." aria-label="Search" />
+            </div>
+            <div class="top-actions">
+                <button class="btn btn-icon" type="button" title="Notifications">
+                    <span class="bi bi-bell-fill"></span>
+                </button>
+                <button class="btn btn-icon" type="button" title="Messages">
+                    <span class="bi bi-chat-dots-fill"></span>
+                </button>
+                <div class="user-card">
+                    <div class="user-avatar">JD</div>
+                    <div class="user-info">
+                        <div class="user-name">Jhon Deo</div>
+                        <div class="user-role">HR Manager</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <article class="content px-4">

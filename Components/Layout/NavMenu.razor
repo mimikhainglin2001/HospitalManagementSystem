@@ -1,86 +1,84 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 
-<div class="top-row navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">HMIS_SYSTEM</a>
+<div class="sidebar-panel">
+    <div class="sidebar-header">
+        <div class="brand-circle">
+            <img src="assets/logo.svg" alt="HMS Logo" class="brand-logo" />
+        </div>
+        <div class="brand-title">HMS</div>
+        <div class="brand-subtitle">Hospital Management</div>
     </div>
-</div>
 
-<div class="nav-scrollable">
-    <nav class="nav flex-column">
-
-        <!-- Home -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill"></span>
-                Home
-            </NavLink>
-        </div>
-
-        <!-- System Codes -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="systemcodes">
-                <span class="bi bi-gear-fill"></span>
-                System Codes
-            </NavLink>
-        </div>
-
-        <!-- Code Details -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="systemcodedetails">
-                <span class="bi bi-card-list"></span>
-                Code Details
-            </NavLink>
-        </div>
-
-        <!-- Departments -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="departments">
-                <span class="bi bi-building"></span>
-                Departments
-            </NavLink>
-        </div>
-
-        <!-- Countries -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="countries">
-                <span class="bi bi-globe2"></span>
-                Countries
-            </NavLink>
-        </div>
-
-         <!-- Users -->
-        <div class="nav-item">
-            <NavLink class="nav-link" href="users">
-                <span class="bi bi-people"></span>
-                System Users
-            </NavLink>
-        </div>
-
-        <!-- Auth Section -->
-        <AuthorizeView>
-            <Authorized>
+    <div class="nav-scrollable">
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">
+                <div class="section-title">Main</div>
                 <div class="nav-item">
-                    <div class="nav-link text-white-50">
-                        <span class="bi bi-person-circle"></span>
-                        @context.User.Identity?.Name
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <a class="nav-link" href="/Identity/Account/Logout">
-                        <span class="bi bi-box-arrow-right"></span>
-                        Logout
-                    </a>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="/Identity/Account/Login">
-                        <span class="bi bi-box-arrow-in-right"></span>
-                        Login
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill"></span>
+                        Dashboard
                     </NavLink>
                 </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">System Security</div>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="systemcodes">
+                        <span class="bi bi-shield-lock-fill"></span>
+                        System Codes
+                    </NavLink>
+                </div>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="systemcodedetails">
+                        <span class="bi bi-card-list"></span>
+                        System Code Details
+                    </NavLink>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Human Resource</div>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="departments">
+                        <span class="bi bi-building"></span>
+                        Departments
+                    </NavLink>
+                </div>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="countries">
+                        <span class="bi bi-globe2"></span>
+                        Countries
+                    </NavLink>
+                </div>
+                <div class="nav-item">
+                    <NavLink class="nav-link" href="users">
+                        <span class="bi bi-people"></span>
+                        System Users
+                    </NavLink>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="sidebar-footer">
+        <AuthorizeView>
+            <Authorized>
+                <div class="user-email">
+                    <span class="bi bi-person-circle"></span>
+                    <span>@context.User.Identity?.Name</span>
+                </div>
+                <a class="logout-link" href="/Identity/Account/Logout">
+                    <span class="bi bi-box-arrow-right"></span>
+                    Logout
+                </a>
+            </Authorized>
+            <NotAuthorized>
+                <a class="logout-link" href="/Identity/Account/Login">
+                    <span class="bi bi-box-arrow-in-right"></span>
+                    Login
+                </a>
             </NotAuthorized>
         </AuthorizeView>
-    </nav>
+    </div>
 </div>

@@ -1,0 +1,45 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login-layout.css" />
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-container">
+            <div class="illustration-panel">
+                <div class="brand">
+                    <img src="~/assets/logo.svg" alt="HMS" />
+                </div>
+                <div class="illustration">
+                    <img src="~/assets/sidebar-bg.svg" alt="illustration" />
+                </div>
+                <div class="illustration-note">
+                    <h2>Hospital Management Portal</h2>
+                    <p>Secure access for clinical teams, administrators, and operational staff.</p>
+                    <ul class="feature-list">
+                        <li>Single sign-in for hospital workflows</li>
+                        <li>Encrypted access with password recovery</li>
+                        <li>Fast onboarding across departments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-panel">
+                <div class="form-card">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

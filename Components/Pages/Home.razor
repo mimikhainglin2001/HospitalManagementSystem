@@ -6,7 +6,115 @@
 @using System.Net.Http.Json
 @using MudBlazor
 
-<MudDataGrid Items="@employees" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+<div class="dashboard-top">
+    <div class="dashboard-header">
+        <div>
+            <h2>Dashboard</h2>
+            <p class="dashboard-subtitle">Overview of your current hospital metrics and activity.</p>
+        </div> 
+        <div class="dashboard-actions">
+            <button class="btn btn-outline-primary btn-sm">Last 7 days</button>
+            <button class="btn btn-primary btn-sm">Generate Report</button>
+        </div>
+    </div>
+
+    <div class="dashboard-cards">
+        <div class="stat-card stat-card--purple">
+            <div class="stat-card__label">Total Orders</div>
+            <div class="stat-card__value">8,542</div>
+            <div class="stat-card__meta">+16% since last week</div>
+        </div>
+        <div class="stat-card stat-card--indigo">
+            <div class="stat-card__label">Total Views</div>
+            <div class="stat-card__value">12.5M</div>
+            <div class="stat-card__meta">-3.4% since last week</div>
+        </div>
+        <div class="stat-card stat-card--green">
+            <div class="stat-card__label">Revenue</div>
+            <div class="stat-card__value">$64.5K</div>
+            <div class="stat-card__meta">+24% since last week</div>
+        </div>
+        <div class="stat-card stat-card--orange">
+            <div class="stat-card__label">Customers</div>
+            <div class="stat-card__value">25.8K</div>
+            <div class="stat-card__meta">+8.2% since last week</div>
+        </div>
+    </div>
+</div>
+    @* <div class="row dashboard-grid g-3">
+        <div class="col-lg-6">
+            <div class="panel shadow-sm">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">Sales</div>
+                        <div class="panel-caption">iPad · Mob · Lap</div>
+                    </div>
+                    <span class="panel-badge">Today</span>
+                </div>
+                <div class="chart chart-area"></div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel shadow-sm">
+                <div class="panel-title">By Device</div>
+                <div class="donut-chart"></div>
+                <div class="device-legend">
+                    <div><span class="legend-swatch legend-tablet"></span>Tablet - 22.5%</div>
+                    <div><span class="legend-swatch legend-mobile"></span>Mobile - 62.3%</div>
+                    <div><span class="legend-swatch legend-desktop"></span>Desktop - 15.2%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel shadow-sm">
+                <div class="panel-title">Traffic</div>
+                <div class="traffic-chart">
+                    <div class="traffic-bar" style="height: 65%;"></div>
+                    <div class="traffic-bar" style="height: 45%;"></div>
+                    <div class="traffic-bar" style="height: 80%;"></div>
+                    <div class="traffic-bar" style="height: 55%;"></div>
+                    <div class="traffic-bar" style="height: 70%;"></div>
+                    <div class="traffic-bar" style="height: 50%;"></div>
+                    <div class="traffic-bar" style="height: 60%;"></div>
+                </div>
+                <div class="device-legend">
+                    <div><span class="legend-swatch legend-traffic-referral"></span>Referral</div>
+                    <div><span class="legend-swatch legend-traffic-search"></span>Search</div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    @* <div class="row dashboard-grid g-3 mt-0">
+        <div class="col-xl-4">
+            <div class="panel shadow-sm">
+                <div class="panel-title">Top Sold</div>
+                <ul class="top-sold-list">
+                    <li>
+                        <div>White Polo T-Shirt</div>
+                        <div>245</div>
+                    </li>
+                    <li>
+                        <div>Black Coat Pant</div>
+                        <div>245</div>
+                    </li>
+                    <li>
+                        <div>Blue Shade Jeans</div>
+                        <div>245</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <div class="panel shadow-sm">
+                <div class="panel-title">Orders</div>
+                <div class="orders-chart"></div>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@* <MudDataGrid Items="@employees" Filterable="false" SortMode="@SortMode.None" Groupable="false">
     <Columns>
         <PropertyColumn Property="x => x.Name" />
         <PropertyColumn Property="x => x.Position" />
@@ -22,9 +130,9 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
-</MudDataGrid>
+</MudDataGrid> *@
 
-@code {
+@* @code {
     public record Employee(string Name, string Position, int YearsEmployed, int Salary, int Rating);
 private List<Employee> employees = new();
     protected override void OnInitialized()
@@ -37,7 +145,7 @@ private List<Employee> employees = new();
             new Employee("John", "IT Director", 17, 229_000, 4),
         };
     }
-}
+} *@
 @* <AuthorizeView>
     <Authorized>
         <h3 style="color:green">Logged In</h3>

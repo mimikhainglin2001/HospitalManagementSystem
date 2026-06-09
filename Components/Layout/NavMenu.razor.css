@@ -1,52 +1,201 @@
-/* Sidebar Container */
-.nav-scrollable {
-  height: 100vh;
-  background-color: #1a1a40; /* Match your dark theme */
-  padding-top: 1rem;
-}
-
-.top-row {
-  min-height: 3.5rem;
-  background-color: rgba(0, 0, 0, 0.4);
+.sidebar-panel {
   display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  padding: 2rem 1.35rem 1.5rem;
+  background: linear-gradient(180deg, #081229 0%, #071125 58%, #060f1c 100%);
+  color: #d7e4ff;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding-left: 1rem;
+  gap: 0.35rem;
+  text-align: center;
+  margin-bottom: 1.8rem;
 }
 
-.navbar-brand {
-  font-size: 1.25rem;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
+.brand-circle {
+  width: 4.6rem;
+  height: 4.6rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Sidebar Nav Links */
+.brand-logo {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+.brand-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.brand-subtitle {
+  color: rgba(167, 189, 255, 0.78);
+  font-size: 0.92rem;
+}
+
+.section-title {
+  margin: 1rem 0 0.75rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #7d94d3;
+  font-weight: 700;
+}
+
+.nav-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.1rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  position: relative;
+}
+
 .nav-item .nav-link {
-  color: #d7d7d7;
-  height: 3rem;
+  color: #b3c6ff;
+  min-height: 3.4rem;
   display: flex;
   align-items: center;
   width: 100%;
   padding: 0 1rem;
-  gap: 1rem; /* Space between icon and text */
+  gap: 0.85rem;
+  border-radius: 1rem;
   text-decoration: none;
-  transition: background 0.2s;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-/* Force icons to have a consistent width so text aligns perfectly */
-.nav-link .bi {
-  width: 1.5rem;
+.nav-item .nav-link .bi {
+  width: 1.65rem;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
-/* Hover and Active states */
+.nav-dropdown .dropdown-toggle {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  color: #b3c6ff;
+}
+
+.nav-dropdown .dropdown-toggle:hover,
+.nav-dropdown .dropdown-toggle:focus {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dropdown-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.dropdown-items {
+  display: none;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.3rem;
+  padding-left: 0.7rem;
+}
+
+.dropdown-items.open {
+  display: flex;
+}
+
+.nav-dropdown .dropdown-chevron {
+  color: #9bb9ff;
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+.nav-dropdown .dropdown-chevron.open {
+  transform: rotate(180deg);
+}
+
 .nav-item .nav-link:hover,
 .nav-item .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: rgba(95, 169, 255, 0.12);
+  color: #ffffff;
 }
 
-.text-white-50 {
-  color: rgba(255, 255, 255, 0.5) !important;
+.nav-item .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 4px;
+  border-radius: 0 6px 6px 0;
+  background: #5fa9ff;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.user-email {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(215, 228, 255, 0.88);
+  font-size: 0.95rem;
+}
+
+.user-email .bi {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.logout-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #a6c6ff;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.85rem;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.logout-link:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
 }
