@@ -110,10 +110,16 @@ departments =
     {
         department = await departmentService.GetDepartmentByIdAsync(id) ?? new();
     }
-    private async void Delete(int id)
-    {
-        department = await departmentService.DeleteDepartmentAsync(id) ?? new();
-    }
+     private async Task Delete(int id)
+{
+    department = await departmentService.DeleteDepartmentAsync(id) ?? new();
+
+    Snackbar.Add("Department Deleted Successfully", Severity.Success);
+
+    departments = await GetAllDepartments();
+
+    StateHasChanged();
+}
     
     private bool Search(Department department)
     {

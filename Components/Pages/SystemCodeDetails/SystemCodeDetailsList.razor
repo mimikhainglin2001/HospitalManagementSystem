@@ -111,13 +111,13 @@
 var uri = navigation.ToAbsoluteUri(navigation.Uri);
 var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
     if (query["created"] == "true")
-        Snackbar.Add("System Code Created Successfully", Severity.Success);
+        Snackbar.Add("System Code Details Created Successfully", Severity.Success);
 
     if (query["deleted"] == "true")
-        Snackbar.Add("System Code Deleted Successfully", Severity.Success);
+        Snackbar.Add("System Code Details Deleted Successfully", Severity.Success);
 
     if (query["updated"] == "true")
-        Snackbar.Add("System Code Updated Successfully", Severity.Success);
+        Snackbar.Add("System Code Details Updated Successfully", Severity.Success);
 
     var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
     var user = authState.User;
@@ -132,9 +132,6 @@ systemCodeDetails =
             await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
             }
 
-        
-    
-
     private void Edit(int id)
     {
         navigation.NavigateTo($"/addsystemcodedetails/{id}");
@@ -144,7 +141,7 @@ systemCodeDetails =
 {
         await systemCodeDetailsService.DeleteSystemCodeDetailAsync(id);
 
-    Snackbar.Add("System Code Deleted Successfully", Severity.Success);
+    Snackbar.Add("System Code Details Deleted Successfully", Severity.Success);
 
 systemCodeDetails =
             await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();

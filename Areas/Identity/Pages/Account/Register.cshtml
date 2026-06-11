@@ -1,121 +1,198 @@
 ﻿@page
 @model RegisterModel
 @{
-    Layout = "_LoginLayout";
+    Layout = "/Areas/Identity/Pages/Shared/_LoginLayout.cshtml";
     ViewData["Title"] = "Register";
 }
 
-<div>
-    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-        <div class="form-header">
-            <h1>Create your account</h1>
-            <p>Register for secure access to the hospital management portal.</p>
+<div class="login-container" style="max-width: 520px;">
+    <div class="form-card">
+
+        <!-- Brand Icon -->
+        <div class="brand-icon">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" stroke="none">
+                    <path d="M12 1C8.5 1 5.5 3.5 5.5 7c0 1.5.5 2.9 1.4 4-.3.6-.5 1.3-.6 2H5a1 1 0 000 2h1.2c.2 1.2.7 2.3 1.5 3.2-.2.4-.4.9-.5 1.4a1 1 0 001.9.6c.1-.4.3-.7.5-1A7.4 7.4 0 0012 20.5a7.4 7.4 0 002.4-.3c.2.3.4.6.5 1a1 1 0 001.9-.6c-.1-.5-.3-1-.5-1.4.8-.9 1.3-2 1.5-3.2H19a1 1 0 000-2h-1.3c-.1-.7-.3-1.4-.6-2 .9-1.1 1.4-2.5 1.4-4C18.5 3.5 15.5 1 12 1zm0 2c2.5 0 4.5 1.8 4.5 4 0 1-.4 2-1 2.7A6 6 0 0012 9a6 6 0 00-3.5 1.7C7.9 10 7.5 9 7.5 8c0-2.2 2-4 4.5-4zm0 8c1.1 0 2.1.3 3 .8a5.5 5.5 0 01-3 5.6 5.5 5.5 0 01-3-5.6A5.4 5.4 0 0112 11z"/>
+                </svg>
+            </div>
         </div>
 
-        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <!-- Header -->
+        <div class="form-header">
+            <h1>Create your account</h1>
+            <p>Register for secure access to the hospital management portal</p>
+        </div>
 
-        <div class="form-body">
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" />
-                <label asp-for="Input.FirstName">First name</label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+
+            <!-- Two-column row for First / Last name -->
+            <div class="input-row">
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" placeholder="First name" />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Last name" />
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" />
-                <label asp-for="Input.LastName">Last name</label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NationalIdNumber" class="form-control" autocomplete="off" aria-required="true" />
-                <label asp-for="Input.NationalIdNumber">National ID number</label>
+            <!-- National ID -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.NationalIdNumber" class="form-control" autocomplete="off" aria-required="true" placeholder="National ID number" />
                 <span asp-validation-for="Input.NationalIdNumber" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Address" class="form-control" autocomplete="street-address" aria-required="true" />
-                <label asp-for="Input.Address">Address</label>
-                <span asp-validation-for="Input.Address" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.MotherName" class="form-control" autocomplete="name" aria-required="true" />
-                <label asp-for="Input.MotherName">Mother's name</label>
-                <span asp-validation-for="Input.MotherName" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FatherName" class="form-control" autocomplete="name" aria-required="true" />
-                <label asp-for="Input.FatherName">Father's name</label>
-                <span asp-validation-for="Input.FatherName" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.EmergencyPhoneNumber" class="form-control" autocomplete="tel" aria-required="true" />
-                <label asp-for="Input.EmergencyPhoneNumber">Emergency phone</label>
-                <span asp-validation-for="Input.EmergencyPhoneNumber" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
+            <!-- Date of Birth -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                    </svg>
+                </span>
                 <input asp-for="Input.DateOfBirth" type="date" class="form-control" autocomplete="bday" aria-required="true" />
-                <label asp-for="Input.DateOfBirth">Date of birth</label>
                 <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
+            <!-- Address -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.Address" class="form-control" autocomplete="street-address" aria-required="true" placeholder="Address" />
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+
+            <!-- Two-column row for Mother / Father name -->
+            <div class="input-row">
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.MotherName" class="form-control" autocomplete="name" aria-required="true" placeholder="Mother's name" />
+                    <span asp-validation-for="Input.MotherName" class="text-danger"></span>
+                </div>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.FatherName" class="form-control" autocomplete="name" aria-required="true" placeholder="Father's name" />
+                    <span asp-validation-for="Input.FatherName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Emergency Phone -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.EmergencyPhoneNumber" class="form-control" autocomplete="tel" aria-required="true" placeholder="Emergency phone number" />
+                <span asp-validation-for="Input.EmergencyPhoneNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email address" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.Password" id="password-input" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                <button type="button" class="pwd-toggle" onclick="togglePassword('password-input', 'eye-icon-1')">
+                    <svg id="eye-icon-1" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.94 10.94 0 0112 20C7 20 2.73 16.39 1 12c.74-1.9 1.97-3.58 3.54-4.9M9.9 4.24A9.12 9.12 0 0112 4c5 0 9.27 3.61 11 8a11.05 11.05 0 01-1.16 2.22M1 1l22 22"/>
+                    </svg>
+                </button>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm password</label>
+            <!-- Confirm Password -->
+            <div class="input-wrap">
+                <span class="input-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                </span>
+                <input asp-for="Input.ConfirmPassword" id="confirm-password-input" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
+                <button type="button" class="pwd-toggle" onclick="togglePassword('confirm-password-input', 'eye-icon-2')">
+                    <svg id="eye-icon-2" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.94 10.94 0 0112 20C7 20 2.73 16.39 1 12c.74-1.9 1.97-3.58 3.54-4.9M9.9 4.24A9.12 9.12 0 0112 4c5 0 9.27 3.61 11 8a11.05 11.05 0 01-1.16 2.22M1 1l22 22"/>
+                    </svg>
+                </button>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-        </div>
 
-        <button id="registerSubmit" type="submit" class="btn btn-primary">Sign Up</button>
+            <!-- Submit -->
+            <button id="registerSubmit" type="submit" class="btn-primary">Create Account</button>
+        </form>
 
-        <div class="form-footer-links">
-            <p class="mb-1">Already have an account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Sign in instead</a></p>
-        </div>
-    </form>
-
-    <section class="mt-4">
-        <div class="section-title">Register with an external account</div>
-        <p class="section-muted">Use one of your connected services to sign up faster.</p>
+        <!-- External Logins -->
         @{
-            if ((Model.ExternalLogins?.Count ?? 0) == 0)
+            if ((Model.ExternalLogins?.Count ?? 0) > 0)
             {
-                <div>
-                    <p>
-                        There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                        about setting up this ASP.NET application to support logging in via external services</a>.
-                    </p>
-                </div>
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <div class="divider"><span>or continue with</span></div>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div class="social-row">
                         @foreach (var provider in Model.ExternalLogins!)
                         {
-                            <button type="submit" class="social-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            <button type="submit" class="social-btn" name="provider" value="@provider.Name">
+                                @provider.DisplayName
+                            </button>
                         }
                     </div>
                 </form>
             }
         }
-    </section>
+
+        <!-- Footer -->
+        <div class="form-footer-links">
+            <p>Already have an account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Sign in</a></p>
+        </div>
+
+    </div>
 </div>
+
+<script>
+    function togglePassword(inputId, iconId) {
+        var input = document.getElementById(inputId);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

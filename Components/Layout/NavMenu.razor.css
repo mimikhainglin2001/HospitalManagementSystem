@@ -7,12 +7,14 @@
   color: #d7e4ff;
   transition: width 0.25s ease;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar-panel.collapsed {
   width: 62px;
 }
 
+/* ── Top bar ── */
 .sidebar-top {
   display: flex;
   align-items: center;
@@ -49,38 +51,47 @@
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    width 0.2s;
 }
 
 .sidebar-panel.collapsed .brand-label {
   opacity: 0;
   width: 0;
+  overflow: hidden;
 }
 
 .hamburger-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 19px;
-  padding: 4px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 20px;
+  padding: 4px 6px;
   flex-shrink: 0;
   line-height: 1;
   display: flex;
   align-items: center;
+  border-radius: 6px;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .hamburger-btn:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
+/* ── Scrollable nav area ── */
 .nav-scrollable {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px 0;
+  padding: 10px 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 
 .sidebar-nav {
@@ -88,13 +99,14 @@
   flex-direction: column;
 }
 
+/* ── Section labels ── */
 .section-label {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: rgba(160, 185, 255, 0.42);
+  letter-spacing: 0.18em;
+  color: rgba(160, 185, 255, 0.35);
   font-weight: 700;
-  padding: 14px 18px 4px;
+  padding: 16px 18px 5px;
   white-space: nowrap;
   overflow: hidden;
   transition: opacity 0.2s;
@@ -102,16 +114,18 @@
 
 .sidebar-panel.collapsed .section-label {
   opacity: 0;
+  pointer-events: none;
 }
 
+/* ── Nav links ── */
 .nav-link {
   display: flex;
   align-items: center;
   gap: 11px;
   padding: 0 14px;
   height: 42px;
-  color: rgba(200, 215, 255, 0.72);
-  text-decoration: none;
+  color: rgba(200, 215, 255, 0.65) !important;
+  text-decoration: none !important;
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
@@ -130,26 +144,50 @@
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #ffffff !important;
+  border-left-color: rgba(233, 69, 96, 0.4) !important;
+  text-decoration: none !important;
 }
 
 .nav-link.active {
-  background: rgba(233, 69, 96, 0.14);
-  color: #fff;
-  border-left-color: #e94560;
+  background: rgba(233, 69, 96, 0.15) !important;
+  color: #ffffff !important;
+  border-left-color: #e94560 !important;
 }
 
+.nav-link.active:hover {
+  background: rgba(233, 69, 96, 0.24) !important;
+  color: #ffffff !important;
+  border-left-color: #e94560 !important;
+}
+
+/* ── Icons ── */
 .nav-icon {
   font-size: 16px;
   width: 20px;
   text-align: center;
   flex-shrink: 0;
+  color: rgba(160, 185, 255, 0.55);
+  transition: color 0.15s;
 }
 
+.nav-link:hover .nav-icon {
+  color: #ffffff;
+}
+
+.nav-link.active .nav-icon {
+  color: #ffffff;
+}
+
+/* ── Nav text ── */
 .nav-text {
   overflow: hidden;
-  transition: opacity 0.2s;
+  white-space: nowrap;
+  transition:
+    opacity 0.2s,
+    width 0.2s;
+  flex: 1;
 }
 
 .sidebar-panel.collapsed .nav-text {
@@ -157,22 +195,31 @@
   width: 0;
 }
 
+/* ── Chevron ── */
 .nav-chevron {
   margin-left: auto;
   font-size: 10px;
-  opacity: 0.5;
-  transition: transform 0.2s;
+  opacity: 0.4;
+  transition:
+    transform 0.22s ease,
+    opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.nav-group-toggle:hover .nav-chevron {
+  opacity: 0.8;
 }
 
 .nav-group-toggle.open .nav-chevron {
   transform: rotate(180deg);
+  opacity: 0.7;
 }
 
 .sidebar-panel.collapsed .nav-chevron {
   display: none;
 }
 
-/* Sub-nav container */
+/* ── Sub-nav ── */
 .sub-nav {
   overflow: hidden;
   max-height: 0;
@@ -180,14 +227,13 @@
 }
 
 .sub-nav.open {
-  max-height: 300px;
+  max-height: 400px;
 }
 
 .sidebar-panel.collapsed .sub-nav {
   display: none;
 }
 
-/* Each sub item row styled as a button */
 .sub-nav-item {
   display: block;
   width: 100%;
@@ -199,14 +245,13 @@
   box-sizing: border-box;
   align-items: center;
   gap: 10px;
-  padding: 0 14px 0 44px;
-  height: 38px;
-  color: rgba(180, 200, 255, 0.58);
+  padding: 0 14px 0 46px;
+  height: 36px;
+  color: rgba(180, 200, 255, 0.48) !important;
   font-size: 13px;
-  text-decoration: none;
+  text-decoration: none !important;
   cursor: pointer;
   border-left: 3px solid transparent;
-  border-radius: 0 6px 6px 0;
   white-space: nowrap;
   transition:
     background 0.15s,
@@ -215,31 +260,51 @@
   margin: 1px 0;
 }
 
-.sub-link:hover,
-.sub-link.active {
-  color: #e94560;
-  border-left-color: #e94560;
-  background: rgba(233, 69, 96, 0.08);
+.sub-link:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-left-color: rgba(233, 69, 96, 0.35) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  text-decoration: none !important;
 }
 
+.sub-link.active {
+  color: #e94560 !important;
+  border-left-color: #e94560 !important;
+  background: rgba(233, 69, 96, 0.09) !important;
+}
+
+.sub-link.active:hover {
+  color: #ff6b81 !important;
+  border-left-color: #e94560 !important;
+  background: rgba(233, 69, 96, 0.16) !important;
+  text-decoration: none !important;
+}
+
+/* ── Sub dot ── */
 .sub-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: currentColor;
-  opacity: 0.5;
+  opacity: 0.45;
   flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.sub-link:hover .sub-dot,
+.sub-link.active .sub-dot {
+  opacity: 1;
 }
 
 .sub-text {
   flex: 1;
 }
 
-/* Footer */
+/* ── Footer ── */
 .sidebar-footer {
   margin-top: auto;
   padding: 12px 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -251,6 +316,13 @@
   align-items: center;
   gap: 10px;
   overflow: hidden;
+  padding: 6px 4px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.user-row:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .user-avatar {
@@ -269,7 +341,10 @@
 
 .user-info {
   overflow: hidden;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    width 0.2s;
+  min-width: 0;
 }
 
 .sidebar-panel.collapsed .user-info {
@@ -282,11 +357,13 @@
   color: #fff;
   font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-role {
   font-size: 11px;
-  color: rgba(180, 200, 255, 0.5);
+  color: rgba(180, 200, 255, 0.45);
   white-space: nowrap;
 }
 
@@ -294,14 +371,24 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: rgba(180, 200, 255, 0.65);
-  text-decoration: none;
+  color: rgba(180, 200, 255, 0.55) !important;
+  text-decoration: none !important;
   font-size: 13px;
-  padding: 6px 0;
-  border-left: 3px solid transparent;
-  transition: color 0.15s;
+  padding: 7px 8px;
+  border-radius: 8px;
+  border-left: none;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .logout-link:hover {
-  color: #fff;
+  color: #ff6b81 !important;
+  background: rgba(233, 69, 96, 0.1) !important;
+  text-decoration: none !important;
+}
+
+.sidebar-panel.collapsed .logout-link .nav-text {
+  opacity: 0;
+  width: 0;
 }

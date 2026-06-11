@@ -1,5 +1,4 @@
 .page {
-  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -9,10 +8,13 @@
 main {
   flex: 1;
   background: #f3f6ff;
+  min-width: 0;
 }
 
 .sidebar {
   background: transparent;
+  padding: 0;
+  margin: 0;
 }
 
 .top-row {
@@ -95,65 +97,6 @@ main {
   color: #6b7b9d;
 }
 
-.top-row ::deep a,
-.top-row ::deep .btn-link {
-  white-space: nowrap;
-  margin-left: 1.5rem;
-  text-decoration: none;
-}
-
-.top-row ::deep a:hover,
-.top-row ::deep .btn-link:hover {
-  text-decoration: underline;
-}
-
-.top-row ::deep a:first-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (max-width: 640.98px) {
-  .top-row {
-    justify-content: space-between;
-  }
-
-  .top-row ::deep a,
-  .top-row ::deep .btn-link {
-    margin-left: 0;
-  }
-}
-
-@media (min-width: 641px) {
-  .page {
-    flex-direction: row;
-  }
-
-  .sidebar {
-    width: 280px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-  }
-
-  .top-row {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-
-  .top-row.auth ::deep a:first-child {
-    flex: 1;
-    text-align: right;
-    width: 0;
-  }
-
-  .top-row,
-  article {
-    padding-left: 2rem !important;
-    padding-right: 1.5rem !important;
-  }
-}
-
 #blazor-error-ui {
   color-scheme: light only;
   background: lightyellow;
@@ -173,4 +116,50 @@ main {
   position: absolute;
   right: 0.75rem;
   top: 0.5rem;
+}
+
+@media (min-width: 641px) {
+  .page {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .sidebar {
+    flex-shrink: 0;
+    width: 240px; /* match sidebar-panel exactly */
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow: hidden; /* hides any inner overflow */
+    transition: width 0.25s ease; /* smooth collapse */
+  }
+
+  /* when sidebar-panel inside is collapsed, shrink the wrapper too */
+  .sidebar:has(.sidebar-panel.collapsed) {
+    width: 62px;
+  }
+
+  main {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .top-row {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .top-row,
+  article {
+    padding-left: 2rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+@media (max-width: 640.98px) {
+  .top-row {
+    justify-content: space-between;
+  }
 }

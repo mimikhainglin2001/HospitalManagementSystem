@@ -1,77 +1,131 @@
 ﻿@page
 @model LoginModel
-
 @{
-    Layout = "_LoginLayout";
+    Layout = "/Areas/Identity/Pages/Shared/_LoginLayout.cshtml";
     ViewData["Title"] = "Log in";
 }
-<div>
-    <section>
-        <form id="account" method="post">
-            <div class="form-header">
-                <h1>Welcome back</h1>
-                <p>Sign in to manage hospital access and patient workflows securely.</p>
+
+<div class="login-container">
+    <div class="form-card">
+
+        <!-- Brand Icon -->
+        <div class="brand-icon">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" stroke="none">
+                    <path d="M12 1C8.5 1 5.5 3.5 5.5 7c0 1.5.5 2.9 1.4 4-.3.6-.5 1.3-.6 2H5a1 1 0 000 2h1.2c.2 1.2.7 2.3 1.5 3.2-.2.4-.4.9-.5 1.4a1 1 0 001.9.6c.1-.4.3-.7.5-1A7.4 7.4 0 0012 20.5a7.4 7.4 0 002.4-.3c.2.3.4.6.5 1a1 1 0 001.9-.6c-.1-.5-.3-1-.5-1.4.8-.9 1.3-2 1.5-3.2H19a1 1 0 000-2h-1.3c-.1-.7-.3-1.4-.6-2 .9-1.1 1.4-2.5 1.4-4C18.5 3.5 15.5 1 12 1zm0 2c2.5 0 4.5 1.8 4.5 4 0 1-.4 2-1 2.7A6 6 0 0012 9a6 6 0 00-3.5 1.7C7.9 10 7.5 9 7.5 8c0-2.2 2-4 4.5-4zm0 8c1.1 0 2.1.3 3 .8a5.5 5.5 0 01-3 5.6 5.5 5.5 0 01-3-5.6A5.4 5.4 0 0112 11z"/>
+                </svg>
             </div>
+        </div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <!-- Header -->
+        <div class="form-header">
+            <h1>Sign in to your account</h1>
+            <p>Please enter your credentials below</p>
+        </div>
 
-            <div class="form-body">
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
+        <section>
+            <form id="account" method="post">
+                <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+
+                <!-- Email -->
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           autocomplete="username"
+                           aria-required="true"
+                           placeholder="Email address" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
+
+                <!-- Password -->
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                    </span>
+                    <input asp-for="Input.Password"
+                           id="password-input"
+                           class="form-control"
+                           autocomplete="current-password"
+                           aria-required="true"
+                           placeholder="Password" />
+                    <button type="button" class="pwd-toggle" onclick="togglePassword()">
+                        <svg id="eye-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.94 10.94 0 0112 20C7 20 2.73 16.39 1 12c.74-1.9 1.97-3.58 3.54-4.9M9.9 4.24A9.12 9.12 0 0112 4c5 0 9.27 3.61 11 8a11.05 11.05 0 01-1.16 2.22M1 1l22 22"/>
+                        </svg>
+                    </button>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-                <div class="d-flex remember-row">
-                    <label class="form-label mb-0 d-flex align-items-center">
-                        <input class="form-check-input me-2" asp-for="Input.RememberMe" />
+
+                <!-- Remember + Forgot -->
+                <div class="remember-row">
+                    <label class="remember-label">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                     </label>
-                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot Password?</a>
+                    <a asp-page="./ForgotPassword">Forgot password?</a>
                 </div>
-                <div>
-                    <button id="login-submit" type="submit" class="btn btn-primary">Sign In</button>
-                </div>
-            </div>
 
-            <div class="form-footer-links">
-                <p class="mb-1">Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create one now</a></p>
-                <p><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a></p>
-            </div>
-        </form>
-    </section>
+                <!-- Sign In Button -->
+                <button id="login-submit" type="submit" class="btn-primary">Sign In</button>
+            </form>
+        </section>
 
-    <section class="mt-4">
-        <div class="section-title">Continue with another service</div>
-        <p class="section-muted">Use an external account to sign in quickly.</p>
+        <!-- Social Login -->
         @{
-            if ((Model.ExternalLogins?.Count ?? 0) == 0)
+            if ((Model.ExternalLogins?.Count ?? 0) > 0)
             {
-                <div>
-                    <p>
-                        There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                        about setting up this ASP.NET application to support logging in via external services</a>.
-                    </p>
-                </div>
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <div class="divider"><span>or continue with</span></div>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div class="social-row">
                         @foreach (var provider in Model.ExternalLogins!)
                         {
-                            <button type="submit" class="social-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            <button type="submit" class="social-btn" name="provider" value="@provider.Name">
+                                @if (provider.Name == "Google")
+                                {
+                                    <svg width="18" height="18" viewBox="0 0 48 48">
+                                        <path fill="#EA4335" d="M24 9.5c3.1 0 5.8 1.1 8 2.9l6-6C34.5 3.2 29.6 1 24 1 14.8 1 7 6.7 3.7 14.6l7 5.4C12.4 13.6 17.7 9.5 24 9.5z"/>
+                                        <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7c4.3-4 6.2-9.9 6.2-16.9z"/>
+                                        <path fill="#FBBC05" d="M10.7 28.6A14.9 14.9 0 019.5 24c0-1.6.3-3.2.7-4.6l-7-5.4A23.9 23.9 0 000 24c0 3.9.9 7.5 2.6 10.7l8.1-6.1z"/>
+                                        <path fill="#34A853" d="M24 47c5.9 0 10.8-1.9 14.4-5.2l-7.4-5.7c-2 1.4-4.5 2.2-7 2.2-6.3 0-11.6-4.2-13.4-9.8l-8.1 6.1C7 42.1 14.9 47 24 47z"/>
+                                    </svg>
+                                }
+                                else if (provider.Name == "GitHub")
+                                {
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.4.6.1.82-.26.82-.58v-2.02c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.48 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 016 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0024 12C24 5.37 18.63 0 12 0z"/>
+                                    </svg>
+                                }
+                                @provider.DisplayName
+                            </button>
                         }
                     </div>
                 </form>
             }
         }
-    </section>
+
+        <!-- Footer -->
+        <div class="form-footer-links">
+            <p>Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign up</a></p>
+        </div>
+
+    </div>
 </div>
+
+<script>
+    function togglePassword() {
+        var input = document.getElementById('password-input');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
