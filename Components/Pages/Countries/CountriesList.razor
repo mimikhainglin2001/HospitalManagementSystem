@@ -1,4 +1,5 @@
 @page "/countries"
+@rendermode InteractiveServer
 @using HospitalManagementSystem.Data
 @using HospitalManagementSystem.Models
 @using Microsoft.AspNetCore.Identity
@@ -7,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager navigation
+@inject ISnackbar Snackbar
 @attribute [Authorize]
 @attribute [StreamRendering]
 @using MudBlazor
@@ -45,14 +47,14 @@
     <MudTd DataLabel="Actions">
 
     <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                   Color="Color.Primary"
-                   Size="Size.Small"
-                   OnClick="@(() => Edit(context.Id))" />
+               Color="Color.Primary"
+               Size="Size.Small"
+               OnClick="@(async () => await Edit(context.Id))" />
 
-    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                   Color="Color.Error"
-                   Size="Size.Small"
-                   OnClick="@(() => Delete(context.Id))" />
+<MudIconButton Icon="@Icons.Material.Filled.Delete"
+               Color="Color.Error"
+               Size="Size.Small"
+               OnClick="@(async () => await Delete(context.Id))" />
 
 </MudTd>
 </RowTemplate>
@@ -71,31 +73,50 @@
     private string? UserId;
 
     protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+{
+var uri = navigation.ToAbsoluteUri(navigation.Uri);
+var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+    if (query["created"] == "true")
+        Snackbar.Add("System Code Created Successfully", Severity.Success);
 
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var currentUser = await userManager.GetUserAsync(user);
-            UserId = currentUser?.Id;
-        }
-    countries = await GetAllCountries();
+    if (query["deleted"] == "true")
+        Snackbar.Add("System Code Deleted Successfully", Severity.Success);
+
+    if (query["updated"] == "true")
+        Snackbar.Add("System Code Updated Successfully", Severity.Success);
+
+    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    if (user.Identity?.IsAuthenticated == true)
+    {
+        var currentUser = await userManager.GetUserAsync(user);
+        UserId = currentUser?.Id;
     }
+
+        countries = await countryService.GetCountriesAsync() ?? new();
+
+            }
 
     private async Task <List<Country>> GetAllCountries()
     {
         countries = await countryService.GetCountriesAsync() ?? new();
         return countries;
     }
-    private async void Edit(int id)
-    {
-        country = await countryService.GetCountryByIdAsync(id) ?? new();
-    }
-    private async void Delete(int id)
-    {
-        country = await countryService.DeleteCountryAsync(id) ?? new();
-    }
+    private async Task Edit(int id)
+{
+    country = await countryService.GetCountryByIdAsync(id) ?? new();
+}
+    private async Task Delete(int id)
+{
+    country = await countryService.DeleteCountryAsync(id) ?? new();
+
+    Snackbar.Add("Country Deleted Successfully", Severity.Success);
+
+    countries = await GetAllCountries();
+
+    StateHasChanged();
+}
     private bool Search(Country country)
     {
         if(country.Name is not null && country.Code is not null && country.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase) || country.Code.Contains(searchstring, StringComparison.OrdinalIgnoreCase))

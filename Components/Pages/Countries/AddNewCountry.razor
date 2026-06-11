@@ -1,79 +1,77 @@
 @page "/addcountry"
 @rendermode InteractiveServer
+
 @using HospitalManagementSystem.Data
 @using HospitalManagementSystem.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager navigation
+@inject ISnackbar Snackbar
+
 @attribute [Authorize]
 
-<div class = "mx-2">
-<MudPaper Elevation="15" Class="p-4">
-<div class="row">
-    <EditForm Model="@country"
-              OnValidSubmit="@CreateNewCountry"
-              FormName="addcountry">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
- 
-         <div class="col-md-12">
-            <h3>Add New Country</h3>
-        </div>
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
 
-        <div class="col-md-12">
+        <EditForm Model="@country"
+                  OnValidSubmit="@CreateNewCountry"
+                  FormName="addcountry">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <h3>Add New Country</h3>
+
             <div class="row">
 
-                <!-- Code -->
                 <div class="form-group col-md-6">
-                    <label for="countryCode">Code</label>
+                    <label>Code</label>
                     <InputText class="form-control"
                                @bind-Value="country.Code"
                                placeholder="Enter country code" />
-                    <ValidationMessage For="@(() => country.Code)" />
                 </div>
 
-                <!-- Name -->
                 <div class="form-group col-md-6">
-                    <label for="countryName">Name</label>
+                    <label>Name</label>
                     <InputText class="form-control"
                                @bind-Value="country.Name"
                                placeholder="Enter country name" />
-                    <ValidationMessage For="@(() => country.Name)" />
                 </div>
 
             </div>
 
-            <div class="form-group mt-4">
-                <MudItem xs = "12" mt-4>
-                    <MudStack Row Justify="Justify.SpaceBetween">
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
                     <MudButton Href="/countries"
                                Variant="Variant.Filled"
                                Color="Color.Warning"
                                StartIcon="@Icons.Material.Filled.ArrowBack">
-                        Back To List
+                        Back
                     </MudButton>
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.Save"
-                           Class="float-end">
-                    Save Country
-                </MudButton>
-                    </MudStack>
-                </MudItem>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save
+                    </MudButton>
+
+                </MudStack>
             </div>
 
-        </div>
-    </EditForm>
-</div>
+        </EditForm>
+
     </MudPaper>
-    </div>
+</div>
 
 @code {
-    private Country country = new();   // ✅ NEVER nullable
+    private Country country = new();
     private string? UserId;
 
     protected override async Task OnInitializedAsync()
@@ -97,9 +95,6 @@
 
         await countryService.AddCountryAsync(country);
 
-        navigation.NavigateTo("/countries");
+        navigation.NavigateTo("/countries?created=true");
     }
-
-    public void BackToList()
-        => navigation.NavigateTo("/countries");
-}
+    }

@@ -5,31 +5,33 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
+
 @inject NavigationManager navigation
+
 @attribute [Authorize]
 
-<div class = "mx-2">
-<MudPaper Elevation="15" Class="p-4">
-<div class="row">
-    <EditForm Model="@department"
-              OnValidSubmit="@CreateNewDepartment"
-              FormName="adddepartment">
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
 
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+        <EditForm Model="@department"
+                  OnValidSubmit="@CreateNewDepartment"
+                  FormName="adddepartment">
 
-         <div class="col-md-12">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
             <h3>Add New Department</h3>
-        </div>
 
-        <div class="col-md-12">
             <div class="row">
 
                 <!-- Code -->
                 <div class="form-group col-md-6">
-                    <label for="departmentCode">Code</label>
+                    <label>Code</label>
                     <InputText class="form-control"
                                @bind-Value="department.Code"
                                placeholder="Enter department code" />
@@ -38,7 +40,7 @@
 
                 <!-- Name -->
                 <div class="form-group col-md-6">
-                    <label for="departmentName">Name</label>
+                    <label>Name</label>
                     <InputText class="form-control"
                                @bind-Value="department.Name"
                                placeholder="Enter department name" />
@@ -47,33 +49,33 @@
 
             </div>
 
-            <div class="form-group mt-4">
-                <MudItem xs = "12" mt-4>
-                    <MudStack Row Justify="Justify.SpaceBetween">
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
                     <MudButton Href="/departments"
                                Variant="Variant.Filled"
                                Color="Color.Warning"
                                StartIcon="@Icons.Material.Filled.ArrowBack">
                         Back To List
                     </MudButton>
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.Save"
-                           Class="float-end">
-                    Save Department
-                </MudButton>
-                    </MudStack>
-                </MudItem>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save Department
+                    </MudButton>
+
+                </MudStack>
             </div>
 
-        </div>
-    </EditForm>
-</div>
+        </EditForm>
+
     </MudPaper>
-    </div>
+</div>
+
 @code {
-    // ✅ FIX: non-nullable model (this is required)
+    private MudForm form;
     private Department department = new();
 
     private string? UserId;
@@ -92,15 +94,24 @@
 
     protected async Task CreateNewDepartment()
     {
-        department.CreatedOn = DateTime.UtcNow;
-        department.CreatedById = UserId;
-        department.ModifiedOn = DateTime.UtcNow;
-        department.ModifiedById = UserId;
+        try
+        {
+            department.CreatedOn = DateTime.UtcNow;
+            department.CreatedById = UserId;
 
-        await departmentService.AddDepartmentAsync(department);
+            await departmentService.AddDepartmentAsync(department);
 
-        navigation.NavigateTo("/departments");
+            Snackbar.Add("Department Created Successfully", Severity.Success);
+
+await Task.Delay(300); // allow UI to render snackbar
+
+navigation.NavigateTo("/departments?created=true");        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
     }
+
 
     private void BackToList()
         => navigation.NavigateTo("/departments");

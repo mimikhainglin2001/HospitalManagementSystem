@@ -1,84 +1,113 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 
-<div class="sidebar-panel">
-    <div class="sidebar-header">
-        <div class="brand-circle">
-            <img src="assets/logo.svg" alt="HMS Logo" class="brand-logo" />
+<div class="sidebar-panel" id="sidebar-panel">
+    <div class="sidebar-top">
+        <div class="brand">
+            <div class="brand-icon">H</div>
+            <span class="brand-label">HMS</span>
         </div>
-        <div class="brand-title">HMS</div>
-        <div class="brand-subtitle">Hospital Management</div>
+        <button class="hamburger-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+            <span class="bi bi-list"></span>
+        </button>
     </div>
-
+ 
     <div class="nav-scrollable">
         <nav class="sidebar-nav">
-            <div class="sidebar-section">
-                <div class="section-title">Main</div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill"></span>
-                        Dashboard
-                    </NavLink>
+
+            <div class="section-label">Main</div>
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill nav-icon"></span>
+                <span class="nav-text">Dashboard</span>
+            </NavLink>
+
+            <div class="section-label">Human Resource</div>
+            <button class="nav-link nav-group-toggle" onclick="toggleGroup('hr-group', this)">
+                <span class="bi bi-people-fill nav-icon"></span>
+                <span class="nav-text">Human Resource</span>
+                <span class="bi bi-chevron-down nav-chevron"></span>
+            </button>
+            <div class="sub-nav open" id="hr-group">
+                <div class="sub-nav-item">
+                    <a class="sub-link" href="/departments">
+                        <span class="sub-dot"></span>
+                        <span class="sub-text">Departments</span>
+                    </a>
+                </div>
+                <div class="sub-nav-item">
+                    <a class="sub-link" href="/countries">
+                        <span class="sub-dot"></span>
+                        <span class="sub-text">Countries</span>
+                    </a>
+                </div>
+                <div class="sub-nav-item">
+                    <a class="sub-link" href="/users">
+                        <span class="sub-dot"></span>
+                        <span class="sub-text">System Users</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <div class="section-title">System Security</div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="systemcodes">
-                        <span class="bi bi-shield-lock-fill"></span>
-                        System Codes
-                    </NavLink>
+            <div class="section-label">System Security</div>
+            <button class="nav-link nav-group-toggle" onclick="toggleGroup('sec-group', this)">
+                <span class="bi bi-shield-lock-fill nav-icon"></span>
+                <span class="nav-text">System Security</span>
+                <span class="bi bi-chevron-down nav-chevron"></span>
+            </button>
+            <div class="sub-nav" id="sec-group">
+                <div class="sub-nav-item">
+                    <a class="sub-link" href="/systemcodes">
+                        <span class="sub-dot"></span>
+                        <span class="sub-text">System Codes</span>
+                    </a>
                 </div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="systemcodedetails">
-                        <span class="bi bi-card-list"></span>
-                        System Code Details
-                    </NavLink>
+                <div class="sub-nav-item">
+                    <a class="sub-link" href="/systemcodedetails">
+                        <span class="sub-dot"></span>
+                        <span class="sub-text">System Code Details</span>
+                    </a>
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <div class="section-title">Human Resource</div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="departments">
-                        <span class="bi bi-building"></span>
-                        Departments
-                    </NavLink>
-                </div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="countries">
-                        <span class="bi bi-globe2"></span>
-                        Countries
-                    </NavLink>
-                </div>
-                <div class="nav-item">
-                    <NavLink class="nav-link" href="users">
-                        <span class="bi bi-people"></span>
-                        System Users
-                    </NavLink>
-                </div>
-            </div>
         </nav>
     </div>
 
     <div class="sidebar-footer">
         <AuthorizeView>
             <Authorized>
-                <div class="user-email">
-                    <span class="bi bi-person-circle"></span>
-                    <span>@context.User.Identity?.Name</span>
+                <div class="user-row">
+                    <div class="user-avatar">
+                        @(context.User.Identity?.Name?.Length >= 2
+                            ? context.User.Identity.Name.Substring(0, 2).ToUpper()
+                            : "U")
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">@context.User.Identity?.Name</div>
+                        <div class="user-role">HR Manager</div>
+                    </div>
                 </div>
                 <a class="logout-link" href="/Identity/Account/Logout">
                     <span class="bi bi-box-arrow-right"></span>
-                    Logout
+                    <span class="nav-text">Logout</span>
                 </a>
             </Authorized>
             <NotAuthorized>
                 <a class="logout-link" href="/Identity/Account/Login">
                     <span class="bi bi-box-arrow-in-right"></span>
-                    Login
+                    <span class="nav-text">Login</span>
                 </a>
             </NotAuthorized>
         </AuthorizeView>
     </div>
 </div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar-panel').classList.toggle('collapsed');
+    }
+    function toggleGroup(id, el) {
+        var sub = document.getElementById(id);
+        var isOpen = sub.classList.contains('open');
+        sub.classList.toggle('open', !isOpen);
+        el.classList.toggle('open', !isOpen);
+    }
+</script>

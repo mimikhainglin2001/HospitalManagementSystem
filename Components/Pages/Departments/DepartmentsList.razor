@@ -1,4 +1,5 @@
 @page "/departments"
+@rendermode InteractiveServer
 @using HospitalManagementSystem.Data
 @using HospitalManagementSystem.Models
 @using Microsoft.AspNetCore.Identity
@@ -6,7 +7,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
+
 @inject NavigationManager navigation
+
 @attribute [Authorize]
 @attribute [StreamRendering]
 @using MudBlazor
@@ -71,19 +75,31 @@
     public Department department = new();
     private List<Department> departments { get; set; }= new();
     private string? UserId;
+protected override async Task OnInitializedAsync()
+{
+var uri = navigation.ToAbsoluteUri(navigation.Uri);
+var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+    if (query["created"] == "true")
+        Snackbar.Add("Department Created Successfully", Severity.Success);
 
-    protected override async Task OnInitializedAsync()
+    if (query["deleted"] == "true")
+        Snackbar.Add("Department Deleted Successfully", Severity.Success);
+
+    if (query["updated"] == "true")
+        Snackbar.Add("Department Updated Successfully", Severity.Success);
+
+    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    if (user.Identity?.IsAuthenticated == true)
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var currentUser = await userManager.GetUserAsync(user);
-            UserId = currentUser?.Id;
-        }
-    departments = await GetAllDepartments();
+        var currentUser = await userManager.GetUserAsync(user);
+        UserId = currentUser?.Id;
     }
+
+departments =
+            await departmentService.GetDepartmentsAsync() ?? new();
+            }
 
     private async Task <List<Department>> GetAllDepartments()
     {
@@ -98,6 +114,7 @@
     {
         department = await departmentService.DeleteDepartmentAsync(id) ?? new();
     }
+    
     private bool Search(Department department)
     {
         if(department.Name is not null && department.Code is not null && department.Name.Contains(searchstring, StringComparison.OrdinalIgnoreCase) || department.Code.Contains(searchstring, StringComparison.OrdinalIgnoreCase))

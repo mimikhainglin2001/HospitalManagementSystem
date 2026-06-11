@@ -1,4 +1,5 @@
 @page "/addsystemcode"
+@rendermode InteractiveServer
 @using HospitalManagementSystem.Data
 @using HospitalManagementSystem.Models
 @using Microsoft.AspNetCore.Identity
@@ -7,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager navigation
+@inject ISnackbar Snackbar
 @attribute [Authorize]
 <div class = "mx-2">
 <MudPaper Elevation="15" Class="p-4">
@@ -108,8 +110,7 @@
 
         await systemCodeService.AddSystemCodeAsync(systemCode);
 
-        navigation.NavigateTo("/systemcodes");
-    }
+ navigation.NavigateTo("/systemcodes?created=true");    }
 
     public void BackToList()
     {

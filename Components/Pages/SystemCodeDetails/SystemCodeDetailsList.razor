@@ -1,4 +1,5 @@
 @page "/systemcodedetails"
+@rendermode InteractiveServer
 @using HospitalManagementSystem.Data
 @using HospitalManagementSystem.Models
 @using Microsoft.AspNetCore.Identity
@@ -6,6 +7,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
 @inject NavigationManager navigation
 @attribute [Authorize]
 @attribute [StreamRendering]
@@ -104,20 +106,34 @@
 
     private string? UserId;
 
-    protected override async Task OnInitializedAsync()
+   protected override async Task OnInitializedAsync()
+{
+var uri = navigation.ToAbsoluteUri(navigation.Uri);
+var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+    if (query["created"] == "true")
+        Snackbar.Add("System Code Created Successfully", Severity.Success);
+
+    if (query["deleted"] == "true")
+        Snackbar.Add("System Code Deleted Successfully", Severity.Success);
+
+    if (query["updated"] == "true")
+        Snackbar.Add("System Code Updated Successfully", Severity.Success);
+
+    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    if (user.Identity?.IsAuthenticated == true)
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var currentUser = await userManager.GetUserAsync(user);
-            UserId = currentUser?.Id;
-        }
-
-        systemCodeDetails =
-            await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
+        var currentUser = await userManager.GetUserAsync(user);
+        UserId = currentUser?.Id;
     }
+
+systemCodeDetails =
+            await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
+            }
+
+        
+    
 
     private void Edit(int id)
     {
@@ -125,11 +141,14 @@
     }
 
     private async Task Delete(int id)
-    {
+{
         await systemCodeDetailsService.DeleteSystemCodeDetailAsync(id);
-        systemCodeDetails =
+
+    Snackbar.Add("System Code Deleted Successfully", Severity.Success);
+
+systemCodeDetails =
             await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
-    }
+            }
 
     private bool Search(SystemCodeDetail item)
     {
