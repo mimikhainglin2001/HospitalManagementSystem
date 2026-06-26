@@ -1,0 +1,235 @@
+@page "/addpatient"
+@rendermode InteractiveServer
+
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@inject ISnackbar Snackbar
+
+@attribute [Authorize]
+
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
+
+        <EditForm Model="patient" OnValidSubmit="CreateNewPatient" FormName="addpatient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <h3>Add New Patient</h3>
+                </div>
+
+                @* <div class="form-group col-md-4">
+                    <label>Patient No</label>
+                    <InputText class="form-control" @bind-Value="patient.PatientNo" />
+                </div> *@
+
+                <div class="form-group col-md-4">
+                    <label>First Name</label>
+                    <InputText class="form-control" @bind-Value="patient.FirstName" />
+                    <ValidationMessage For="@(() => patient.FirstName)" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Middle Name</label>
+                    <InputText class="form-control" @bind-Value="patient.MiddleName" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Last Name</label>
+                    <InputText class="form-control" @bind-Value="patient.LastName" />
+                    <ValidationMessage For="@(() => patient.LastName)" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Phone Number</label>
+                    <InputText class="form-control" @bind-Value="patient.PhoneNumber" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>ID Number</label>
+                    <InputText class="form-control" @bind-Value="patient.IdNumber" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Email Address</label>
+                    <InputText class="form-control" @bind-Value="patient.EmailAddress" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Date Of Birth</label>
+                    <InputDate class="form-control" @bind-Value="patient.DateOfBirth" />
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group col-md-4">
+                    <label>Gender</label>
+                    <InputSelect class="form-control" @bind-Value="patient.GenderId">
+                        <option value="">Select Gender</option>
+                        @foreach (var g in Genders)
+                        {
+                            <option value="@g.Id">@g.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Blood Group -->
+                <div class="form-group col-md-4">
+                    <label>Blood Group</label>
+                    <InputSelect class="form-control" @bind-Value="patient.BloodGroupId">
+                        <option value="">Select Blood Group</option>
+                        @foreach (var b in BloodGroups)
+                        {
+                            <option value="@b.Id">@b.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Marital Status -->
+                <div class="form-group col-md-4">
+                    <label>Marital Status</label>
+                    <InputSelect class="form-control" @bind-Value="patient.MaritalStatusId">
+                        <option value="">Select Marital Status</option>
+                        @foreach (var m in MaritalStatuses)
+                        {
+                            <option value="@m.Id">@m.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Guardian Name</label>
+                    <InputText class="form-control" @bind-Value="patient.GuardianName" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Guardian Phone</label>
+                    <InputText class="form-control" @bind-Value="patient.GuardianPhoneNumber" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Address</label>
+                    <InputText class="form-control" @bind-Value="patient.Address" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Remarks</label>
+                    <InputText class="form-control" @bind-Value="patient.Remarks" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Allergies</label>
+                    <InputText class="form-control" @bind-Value="patient.Allergies" />
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
+                    <MudButton Href="/patients"
+                               Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.ArrowBack">
+                        Back To List
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save Patient
+                    </MudButton>
+
+                </MudStack>
+            </div>
+
+        </EditForm>
+
+    </MudPaper>
+</div>
+
+@code {
+
+    public Patient patient { get; set; } = new();
+
+    public List<SystemCodeDetail> AllSystemCodeDetails = new();
+    public List<SystemCodeDetail> Genders = new();
+    public List<SystemCodeDetail> BloodGroups = new();
+    public List<SystemCodeDetail> MaritalStatuses = new();
+
+    public string? UserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                var currentUser = await userManager.GetUserAsync(user);
+                UserId = currentUser?.Id;
+            }
+
+            AllSystemCodeDetails = await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
+
+            Genders = AllSystemCodeDetails
+                .Where(d => d.SystemCode?.Code?.ToLower().Contains("gender") == true)
+                .ToList();
+
+            BloodGroups = AllSystemCodeDetails
+                .Where(d => d.SystemCode?.Code?.ToLower().Contains("blood") == true)
+                .ToList();
+
+            MaritalStatuses = AllSystemCodeDetails
+                .Where(d => d.SystemCode?.Code?.ToLower().Contains("marital") == true)
+                .ToList();
+
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Load error: {ex.Message}", Severity.Error);
+        }
+    }
+
+    protected async Task CreateNewPatient()
+    {
+        try
+        {
+            patient.CreatedOn = DateTime.UtcNow;
+            patient.CreatedById = UserId;
+            patient.ModifiedOn = DateTime.UtcNow;
+            patient.ModifiedById = UserId;
+
+            if (string.IsNullOrWhiteSpace(patient.PatientNo))
+                patient.PatientNo = $"PT-{DateTime.UtcNow:yyyyMMddHHmmss}";
+
+            await patientService.AddPatientAsync(patient);
+
+            Snackbar.Add("Patient created successfully", Severity.Success);
+
+            navigation.NavigateTo("/patients?created=true");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+    }
+
+
+	public void BackToList()
+	{
+		navigation.NavigateTo("/patients");
+	}
+}
+

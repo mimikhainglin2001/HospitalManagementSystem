@@ -81,6 +81,7 @@ builder.Services.AddScoped<ISystemCodeDetailsRepository, SystemCodeDetailsReposi
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddMudServices();
 var app = builder.Build();
 

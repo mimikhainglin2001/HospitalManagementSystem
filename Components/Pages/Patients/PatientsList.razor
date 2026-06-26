@@ -1,0 +1,147 @@
+@page "/patients"
+@rendermode InteractiveServer
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@inject ISnackbar Snackbar
+@attribute [Authorize]
+@attribute [StreamRendering]
+@using MudBlazor
+
+<MudCard Elevation="3">
+
+    <MudCardHeader>
+        <MudSpacer />
+        <MudButton Href="/addpatient"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Register Patient
+        </MudButton>
+    </MudCardHeader>
+
+    <MudDivider />
+
+   <MudTable Elevation="25" Items="patients" Filter = "new Func<Patient, bool>(Search)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Patients List</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchstring" Placeholder="Search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Patient No</MudTh>
+        <MudTh>Full Name</MudTh>
+        <MudTh>Phone</MudTh>
+        <MudTh>ID Number</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>DOB</MudTh>
+        <MudTh>Gender</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+<RowTemplate>
+    <MudTd DataLabel="PatientNo">@context.PatientNo</MudTd>
+    <MudTd DataLabel="FullName">@($"{context.FirstName} {context.MiddleName} {context.LastName}".Trim())</MudTd>
+    <MudTd DataLabel="Phone">@context.PhoneNumber</MudTd>
+    <MudTd DataLabel="IdNumber">@context.IdNumber</MudTd>
+    <MudTd DataLabel="Email">@context.EmailAddress</MudTd>
+    <MudTd DataLabel="DOB">@context.DateOfBirth.ToString("yyyy-MM-dd")</MudTd>
+    <MudTd DataLabel="Gender">@context.Gender?.Code</MudTd>
+    <MudTd DataLabel="Actions">
+
+    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   OnClick="@(() => Edit(context.Id))" />
+
+    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                   Color="Color.Error"
+                   Size="Size.Small"
+                   OnClick="@(() => Delete(context.Id))" />
+
+</MudTd>
+</RowTemplate>
+<PagerContent>
+    <MudTablePager PageSizeOptions="new int[]{5,10,20, 50, 100}" />
+</PagerContent>
+   </MudTable>
+
+</MudCard>
+
+@code {
+
+    public string searchstring = "";
+    private List<Patient> patients { get; set; } = new();
+    private string? UserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        try
+        {
+            patients = await patientService.GetPatientsAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            patients = new();
+            Snackbar.Add($"Unable to load patients: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Edit(int id)
+    {
+        navigation.NavigateTo($"/addpatient/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+        try
+        {
+            await patientService.DeletePatientAsync(id);
+            Snackbar.Add("Patient Deleted Successfully", Severity.Success);
+            patients = await patientService.GetPatientsAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Unable to delete patient: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private bool Search(Patient patient)
+    {
+        if (string.IsNullOrWhiteSpace(searchstring))
+            return true;
+
+        if (patient.PatientNo?.Contains(searchstring, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ((patient.FirstName ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((patient.LastName ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((patient.EmailAddress ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((patient.PhoneNumber ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((patient.IdNumber ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}

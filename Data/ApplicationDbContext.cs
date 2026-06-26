@@ -11,6 +11,7 @@ namespace HospitalManagementSystem.Data;
         public DbSet<SystemCodeDetail> SystemCodeDetails { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Patient> Patients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

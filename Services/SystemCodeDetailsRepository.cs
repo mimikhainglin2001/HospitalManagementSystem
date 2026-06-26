@@ -22,6 +22,15 @@ namespace HospitalManagementSystem.Services
             .Include(x => x.ModifiedBy)
             .ToListAsync();
     }
+     public async Task<List<SystemCodeDetail>> GetSystemCodeDetailsByCodeAsync(string code)
+    {
+        return await _context.SystemCodeDetails
+            .Include(x => x.SystemCode)
+            .Include(x => x.CreatedBy)
+            .Include(x => x.ModifiedBy)
+            .Where(x => x.SystemCode.Code == code)
+            .ToListAsync();
+    }
 
     public async Task<SystemCodeDetail?> GetSystemCodeDetailByIdAsync(int id)
     {
