@@ -6,10 +6,13 @@ using Microsoft.EntityFrameworkCore;
 public class PatientRepository : IPatientRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly NumberSeriesGenerationService _numberseries;
 
-    public PatientRepository(ApplicationDbContext context)
+
+    public PatientRepository(ApplicationDbContext context, NumberSeriesGenerationService numberseries)
     {
         _context = context;
+        _numberseries = numberseries;
     }
 
     public async Task<List<Patient>> GetPatientsAsync()
@@ -32,6 +35,7 @@ public class PatientRepository : IPatientRepository
 
     public async Task<Patient> AddPatientAsync(Patient patient)
     {
+        patient.PatientNo = await _numberseries.GeneratePatientNumberAsync();
         patient.CreatedOn = DateTime.UtcNow;
         await _context.Patients.AddAsync(patient);
         await _context.SaveChangesAsync();
@@ -72,4 +76,6 @@ public class PatientRepository : IPatientRepository
         await _context.SaveChangesAsync();
         return patient;
     }
+
+    
 }

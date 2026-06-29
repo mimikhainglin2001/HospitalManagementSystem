@@ -98,7 +98,7 @@
                     <label>Marital Status</label>
                     <InputSelect class="form-control" @bind-Value="patient.MaritalStatusId">
                         <option value="">Select Marital Status</option>
-                        @foreach (var m in MaritalStatuses)
+                        @foreach (var m in MAS)
                         {
                             <option value="@m.Id">@m.Description</option>
                         }
@@ -164,7 +164,7 @@
     public List<SystemCodeDetail> AllSystemCodeDetails = new();
     public List<SystemCodeDetail> Genders = new();
     public List<SystemCodeDetail> BloodGroups = new();
-    public List<SystemCodeDetail> MaritalStatuses = new();
+    public List<SystemCodeDetail> MAS = new();
 
     public string? UserId;
 
@@ -191,10 +191,10 @@
                 .Where(d => d.SystemCode?.Code?.ToLower().Contains("blood") == true)
                 .ToList();
 
-            MaritalStatuses = AllSystemCodeDetails
-                .Where(d => d.SystemCode?.Code?.ToLower().Contains("marital") == true)
+            MAS = AllSystemCodeDetails
+                .Where(d => d.SystemCode?.Code?.Contains("MAS", StringComparison.OrdinalIgnoreCase) == true)
                 .ToList();
-
+ 
         }
         catch (Exception ex)
         {

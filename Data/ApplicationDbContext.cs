@@ -4,36 +4,39 @@ using HospitalManagementSystem.Models;
 namespace HospitalManagementSystem.Data;
 
 
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<ApplicationUser>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser>(options)
+{
+    public DbSet<SystemCode> SystemCodes { get; set; }
+    public DbSet<SystemCodeDetail> SystemCodeDetails { get; set; }
+    public DbSet<Country> Countries { get; set; }
+    public DbSet<Department> Departments { get; set; }
+    public DbSet<Patient> Patients { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Appointment> Appointments { get; set; }
+    public DbSet<AppointmentSlot> AppointmentSlots { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        public DbSet<SystemCode> SystemCodes { get; set; }
-        public DbSet<SystemCodeDetail> SystemCodeDetails { get; set; }
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<Patient> Patients { get; set; }
+        base.OnModelCreating(builder);
+        builder.Entity<ApplicationUser>()
+            .HasOne(s => s.Gender)
+            .WithMany()
+            .HasForeignKey(s => s.GenderId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-                builder.Entity<ApplicationUser>()
-                    .HasOne(s => s.Gender)
-                    .WithMany()
-                    .HasForeignKey(s => s.GenderId)
-                    .OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<ApplicationUser>()
+        .HasOne(s => s.MaritalStatus)
+        .WithMany()
+        .HasForeignKey(s => s.MaritalStatusId)
+        .OnDelete(DeleteBehavior.Restrict);
 
-                    builder.Entity<ApplicationUser>()
-                    .HasOne(s => s.MaritalStatus)
-                    .WithMany()
-                    .HasForeignKey(s => s.MaritalStatusId)
-                    .OnDelete(DeleteBehavior.Restrict);   
+        builder.Entity<ApplicationUser>()
+        .HasOne(s => s.BloodGroup)
+        .WithMany()
+        .HasForeignKey(s => s.BloodGroupId)
+        .OnDelete(DeleteBehavior.Restrict);
 
-                    builder.Entity<ApplicationUser>()
-                    .HasOne(s => s.BloodGroup)
-                    .WithMany()
-                    .HasForeignKey(s => s.BloodGroupId)
-                    .OnDelete(DeleteBehavior.Restrict);
 
-               
-        }
     }
+}

@@ -4,6 +4,7 @@ using HospitalManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629081249_appointment_details")]
+    partial class appointment_details
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,10 +149,6 @@ namespace HospitalManagementSystem.Migrations
 
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("AppointmentNo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("CreatedById")
                         .HasColumnType("varchar(255)");

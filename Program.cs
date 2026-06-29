@@ -82,6 +82,11 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentSlotRepository, AppointmentSlotRepository>();
+builder.Services.AddTransient<NumberSeriesGenerationService>();
+
 builder.Services.AddMudServices();
 var app = builder.Build();
 

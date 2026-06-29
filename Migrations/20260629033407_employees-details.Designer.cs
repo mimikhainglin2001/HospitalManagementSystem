@@ -4,6 +4,7 @@ using HospitalManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629033407_employees-details")]
+    partial class employeesdetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,130 +135,6 @@ namespace HospitalManagementSystem.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HospitalManagementSystem.Models.Appointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("AppointmentNo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentModeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PriorityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remarks")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("SlotId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("PatientId");
-
-                    b.HasIndex("PaymentModeId");
-
-                    b.HasIndex("PriorityId");
-
-                    b.HasIndex("SlotId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("Appointments");
-                });
-
-            modelBuilder.Entity("HospitalManagementSystem.Models.AppointmentSlot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedById")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("ShiftId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.HasIndex("ShiftId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("AppointmentSlots");
-                });
-
             modelBuilder.Entity("HospitalManagementSystem.Models.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -338,7 +217,7 @@ namespace HospitalManagementSystem.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BloodGroupId")
+                    b.Property<int>("BloodGroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedById")
@@ -353,10 +232,10 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<DateTime>("DateOfJoining")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("DepartmentId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DesignationId")
+                    b.Property<int>("DesignationId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmailAddress")
@@ -375,7 +254,7 @@ namespace HospitalManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("GenderId")
+                    b.Property<int>("GenderId")
                         .HasColumnType("int");
 
                     b.Property<string>("IdNumber")
@@ -407,10 +286,10 @@ namespace HospitalManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpecialistId")
+                    b.Property<int>("SpecialistId")
                         .HasColumnType("int");
 
                     b.Property<int>("StatusId")
@@ -777,106 +656,6 @@ namespace HospitalManagementSystem.Migrations
                     b.Navigation("MaritalStatus");
                 });
 
-            modelBuilder.Entity("HospitalManagementSystem.Models.Appointment", b =>
-                {
-                    b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("HospitalManagementSystem.Models.Employee", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("HospitalManagementSystem.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId");
-
-                    b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "PaymentMode")
-                        .WithMany()
-                        .HasForeignKey("PaymentModeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Priority")
-                        .WithMany()
-                        .HasForeignKey("PriorityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Models.AppointmentSlot", "Slot")
-                        .WithMany()
-                        .HasForeignKey("SlotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("ModifiedBy");
-
-                    b.Navigation("Patient");
-
-                    b.Navigation("PaymentMode");
-
-                    b.Navigation("Priority");
-
-                    b.Navigation("Slot");
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("HospitalManagementSystem.Models.AppointmentSlot", b =>
-                {
-                    b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("HospitalManagementSystem.Models.Employee", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById");
-
-                    b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Shift")
-                        .WithMany()
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("ModifiedBy");
-
-                    b.Navigation("Shift");
-
-                    b.Navigation("Status");
-                });
-
             modelBuilder.Entity("HospitalManagementSystem.Models.Country", b =>
                 {
                     b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "CreatedBy")
@@ -911,7 +690,9 @@ namespace HospitalManagementSystem.Migrations
                 {
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "BloodGroup")
                         .WithMany()
-                        .HasForeignKey("BloodGroupId");
+                        .HasForeignKey("BloodGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Data.ApplicationUser", "CreatedBy")
                         .WithMany()
@@ -919,15 +700,21 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasOne("HospitalManagementSystem.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Designation")
                         .WithMany()
-                        .HasForeignKey("DesignationId");
+                        .HasForeignKey("DesignationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Gender")
                         .WithMany()
-                        .HasForeignKey("GenderId");
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "MaritalStatus")
                         .WithMany()
@@ -939,11 +726,15 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Specialist")
                         .WithMany()
-                        .HasForeignKey("SpecialistId");
+                        .HasForeignKey("SpecialistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.SystemCodeDetail", "Status")
                         .WithMany()

@@ -1,0 +1,145 @@
+@page "/employees"
+@rendermode InteractiveServer
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@inject ISnackbar Snackbar
+@attribute [Authorize]
+@attribute [StreamRendering]
+@using MudBlazor
+
+<MudCard Elevation="3">
+    <MudCardHeader>
+        <MudSpacer />
+        <MudButton Href="/addemployee"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add Employee
+        </MudButton>
+    </MudCardHeader>
+
+    <MudDivider />
+
+    <MudTable Elevation="25" Items="employees" Filter="new Func<Employee, bool>(Search)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Employees List</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchstring" Placeholder="Search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Employee No</MudTh>
+            <MudTh>Employee Name</MudTh>
+            <MudTh>ID Number</MudTh>
+            <MudTh>Phone Number</MudTh>
+            <MudTh>Gender</MudTh>
+            <MudTh>Created By</MudTh>
+            <MudTh>Created On</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="EmployeeNo">@context.EmployeeNo</MudTd>
+            <MudTd DataLabel="EmployeeName">@($"{context.FirstName} {context.MiddleName} {context.LastName}".Trim())</MudTd>
+            <MudTd DataLabel="IdNumber">@context.IdNumber</MudTd>
+            <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+            <MudTd DataLabel="Gender">@context.Gender?.Description</MudTd>
+            <MudTd DataLabel="CreatedBy">@context.CreatedBy?.FullName</MudTd>
+            <MudTd DataLabel="CreatedOn">@context.CreatedOn.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               OnClick="@(() => Edit(context.Id))" />
+
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error" 
+                               Size="Size.Small"
+                               OnClick="@(() => Delete(context.Id))" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+        </PagerContent>
+    </MudTable>
+</MudCard>
+
+@code {
+    public string searchstring = "";
+    private List<Employee> employees { get; set; } = new();
+    private string? UserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        try
+        {
+            employees = await employeeService.GetEmployeesAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            employees = new();
+            Snackbar.Add($"Unable to load employees: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Edit(int id)
+    {
+        navigation.NavigateTo($"/addemployee/{id}");
+    }
+
+    private async Task Delete(int id)
+    {
+        try
+        {
+            await employeeService.DeleteEmployeeAsync(id);
+            Snackbar.Add("Employee Deleted Successfully", Severity.Success);
+            employees = await employeeService.GetEmployeesAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Unable to delete employee: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private bool Search(Employee employee)
+    {
+        if (string.IsNullOrWhiteSpace(searchstring))
+            return true;
+
+        if ((employee.EmployeeNo ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.FirstName ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.LastName ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.IdNumber ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.EmailAddress ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.PhoneNumber ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((employee.Gender?.Description ?? string.Empty).Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}

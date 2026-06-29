@@ -1,0 +1,276 @@
+@page "/addemployee"
+@page "/addemployee/{Id:int}"
+@rendermode InteractiveServer
+
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager navigation
+@inject ISnackbar Snackbar
+
+@attribute [Authorize]
+@using MudBlazor
+
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
+
+        <EditForm Model="employee" OnValidSubmit="CreateOrUpdateEmployee" FormName="addemployee">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <h3>@(Id.HasValue ? "Update Employee" : "Add New Employee")</h3>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Employee No</label>
+                    <InputText class="form-control" @bind-Value="employee.EmployeeNo" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>First Name</label>
+                    <InputText class="form-control" @bind-Value="employee.FirstName" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Middle Name</label>
+                    <InputText class="form-control" @bind-Value="employee.MiddleName" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Last Name</label>
+                    <InputText class="form-control" @bind-Value="employee.LastName" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Email</label>
+                    <InputText class="form-control" @bind-Value="employee.EmailAddress" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Phone</label>
+                    <InputText class="form-control" @bind-Value="employee.PhoneNumber" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Date of Birth</label>
+                    <InputDate class="form-control" @bind-Value="employee.DateOfBirth" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Date of Joining</label>
+                    <InputDate class="form-control" @bind-Value="employee.DateOfJoining" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>ID Number</label>
+                    <InputText class="form-control" @bind-Value="employee.IdNumber" />
+                    <ValidationMessage For="@(() => employee.IdNumber)" />
+                </div>
+
+                <!-- Department -->
+                <div class="form-group col-md-4">
+                    <label>Department</label>
+                    <InputSelect class="form-control" @bind-Value="employee.DepartmentId">
+                        <option value="0">Select Department</option>
+                        @foreach (var d in Departments)
+                        {
+                            <option value="@d.Id">@d.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Role -->
+                <div class="form-group col-md-4">
+                    <label>Role</label>
+                    <InputSelect class="form-control" @bind-Value="employee.RoleId">
+                        <option value="0">Select Role</option>
+                        @foreach (var r in Roles)
+                        {
+                            <option value="@r.Id">@r.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Designation -->
+                <div class="form-group col-md-4">
+                    <label>Designation</label>
+                    <InputSelect class="form-control" @bind-Value="employee.DesignationId">
+                        <option value="0">Select Designation</option>
+                        @foreach (var d in Designations)
+                        {
+                            <option value="@d.Id">@d.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Specialist -->
+                <div class="form-group col-md-4">
+                    <label>Specialist</label>
+                    <InputSelect class="form-control" @bind-Value="employee.SpecialistId">
+                        <option value="0">Select Specialist</option>
+                        @foreach (var s in Specialities)
+                        {
+                            <option value="@s.Id">@s.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group col-md-4">
+                    <label>Gender</label>
+                    <InputSelect class="form-control" @bind-Value="employee.GenderId">
+                        <option value="0">Select Gender</option>
+                        @foreach (var g in Genders)
+                        {
+                            <option value="@g.Id">@g.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Blood Group -->
+                <div class="form-group col-md-4">
+                    <label>Blood Group</label>
+                    <InputSelect class="form-control" @bind-Value="employee.BloodGroupId">
+                        <option value="0">Select Blood Group</option>
+                        @foreach (var b in BloodGroups)
+                        {
+                            <option value="@b.Id">@b.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <!-- Marital Status -->
+                <div class="form-group col-md-4">
+                    <label>Marital Status</label>
+                    <InputSelect class="form-control" @bind-Value="employee.MaritalStatusId">
+                        <option value="0">Select Marital Status</option>
+                        @foreach (var m in MAS)
+                        {
+                            <option value="@m.Id">@m.Description</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Father Name</label>
+                    <InputText class="form-control" @bind-Value="employee.FatherName" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Mother Name</label>
+                    <InputText class="form-control" @bind-Value="employee.MotherName" />
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
+                    <MudButton Href="/employees" Variant="Variant.Filled" Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.ArrowBack">
+                        Back To List
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        @(Id.HasValue ? "Update Employee" : "Save Employee")
+                    </MudButton>
+
+                </MudStack>
+            </div>
+
+        </EditForm>
+
+    </MudPaper>
+</div>
+
+@code {
+
+    [Parameter] public int? Id { get; set; }
+
+    private Employee employee = new();
+    private string? UserId;
+
+    private List<Department> Departments = new();
+    private List<SystemCodeDetail> Roles = new();
+    private List<SystemCodeDetail> Designations = new();
+    private List<SystemCodeDetail> Specialities = new();
+    private List<SystemCodeDetail> Genders = new();
+    private List<SystemCodeDetail> BloodGroups = new();
+    private List<SystemCodeDetail> MAS = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        await LoadLookups();
+
+        if (Id.HasValue)
+        {
+            employee = await employeeService.GetEmployeeByIdAsync(Id.Value) ?? new();
+        }
+    }
+
+    private async Task LoadLookups()
+    {
+        try
+        {
+            Departments = await departmentService.GetDepartmentsAsync() ?? new();
+
+            var all = await systemCodeDetailsService.GetSystemCodeDetailsAsync() ?? new();
+
+            Roles = all.Where(x => x.SystemCode?.Code == "Roles").ToList();
+            Designations = all.Where(x => x.SystemCode?.Code == "Designations").ToList();
+            Specialities = all.Where(x => x.SystemCode?.Code == "Specialities").ToList();
+            Genders = all.Where(x => x.SystemCode?.Code == "Gender").ToList();
+            BloodGroups = all.Where(x => x.SystemCode?.Code == "BloodGroups").ToList();
+            MAS = all.Where(x => x.SystemCode?.Code == "MAS").ToList();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.InnerException?.Message ?? ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task CreateOrUpdateEmployee()
+    {
+        try
+        {
+
+            if (Id.HasValue)
+            {
+                employee.ModifiedOn = DateTime.UtcNow;
+                employee.ModifiedById = UserId;
+                await employeeService.UpdateEmployeeAsync(employee);
+                Snackbar.Add("Employee Updated", Severity.Success);
+            }
+            else
+            {
+                employee.CreatedOn = DateTime.UtcNow;
+                employee.CreatedById = UserId;
+
+                await employeeService.AddEmployeeAsync(employee);
+                Snackbar.Add("Employee Created", Severity.Success);
+            }
+
+            navigation.NavigateTo("/employees");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.InnerException?.Message ?? ex.Message, Severity.Error);
+        }
+    }
+}
