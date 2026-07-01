@@ -39,7 +39,8 @@ public class UserRepository : IUserRepository
         var result = await _userManager.CreateAsync(user, user.PasswordHash);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Failed to create user.");
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Failed to create user: {errors}");
         }
         return user;
     }
@@ -76,13 +77,16 @@ public class UserRepository : IUserRepository
 
     public async Task<ApplicationUser?> DeleteUserAsync(string id)
     {
-        // delete user
-        var user = await _context.Users.FindAsync(id);
+        var user = await _userManager.FindByIdAsync(id);
 
         if (user == null) return null;
 
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Failed to delete user: {errors}");
+        }
         return user;
     }
 }

@@ -5,92 +5,81 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager navigation
 @inject ISnackbar Snackbar
+
 @attribute [Authorize]
-<div class = "mx-2">
-<MudPaper Elevation="15" Class="p-4">
-<div class="row">
-    <EditForm Model="systemCode"
-              OnValidSubmit="CreateNewSystemCode"
-              FormName="addsystemcode">
-        <DataAnnotationsValidator />
-        <ValidationSummary /> 
 
-         <div class="col-md-12">
-            <h3>Add New System Code </h3>
-        </div>
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
 
-        <div class="col-md-12">
-            <div class="row">
+        <EditForm Model="systemCode"
+                  OnValidSubmit="CreateNewSystemCode"
+                  FormName="addsystemcode">
 
-                <!-- Code -->
-                <div class="form-group col-md-6">
-                    <label>Code</label>
-                    <InputText class="form-control"
-                               @bind-Value="systemCode.Code"
-                               placeholder="Enter system code" />
+            <DataAnnotationsValidator />
+
+            <h3>Add New System Code</h3>
+
+            <MudGrid>
+
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Code <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="systemCode.Code"
+                                  Placeholder="Enter system code"
+                                  For="@(() => systemCode.Code)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => systemCode.Code)" />
-                </div>
+                </MudItem>
 
-                <!-- Description -->
-                <div class="form-group col-md-6">
-                    <label>Name</label>
-                    <InputText class="form-control"
-                               @bind-Value="systemCode.Description"
-                               placeholder="Enter system code name" />
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="systemCode.Description"
+                                  Placeholder="Enter system code name"
+                                  For="@(() => systemCode.Description)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => systemCode.Description)" />
-                </div>
+                </MudItem>
 
-                <!-- Order No -->
-                @* <div class="form-group col-md-6">
-                    <label>Order No</label>
-                    <InputNumber class="form-control"
-                                 @bind-Value="systemCode.OrderNo" />
-                    <ValidationMessage For="@(() => systemCode.OrderNo)" />
-                </div> *@
+            </MudGrid>
 
-            </div>
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
 
-            <div class="form-group mt-4">
-                <MudItem xs = "12" mt-4>
-                    <MudStack Row Justify="Justify.SpaceBetween">
                     <MudButton Href="/systemcodes"
                                Variant="Variant.Filled"
                                Color="Color.Warning"
                                StartIcon="@Icons.Material.Filled.ArrowBack">
                         Back To List
                     </MudButton>
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.Save"
-                           Class="float-end">
-                    Save System Code
-                </MudButton>
-                    </MudStack>
-                </MudItem>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save System Code
+                    </MudButton>
+
+                </MudStack>
             </div>
 
-        </div>
-    </EditForm>
-</div>
-    </MudPaper>
-    </div>
+        </EditForm>
 
+    </MudPaper>
+</div>
 
 @code {
-    [SupplyParameterFromForm]
-    public SystemCode? systemCode { get; set; }
-
+    private SystemCode systemCode = new();
     public string? UserId;
 
     protected override async Task OnInitializedAsync()
     {
-        systemCode ??= new SystemCode();
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
@@ -110,10 +99,6 @@
 
         await systemCodeService.AddSystemCodeAsync(systemCode);
 
- navigation.NavigateTo("/systemcodes?created=true");    }
-
-    public void BackToList()
-    {
-        navigation.NavigateTo("/systemcodes");
+        navigation.NavigateTo("/systemcodes?created=true");
     }
 }

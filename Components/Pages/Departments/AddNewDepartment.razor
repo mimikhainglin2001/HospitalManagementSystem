@@ -23,31 +23,32 @@
                   FormName="adddepartment">
 
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
             <h3>Add New Department</h3>
 
-            <div class="row">
+            <MudGrid>
 
-                <!-- Code -->
-                <div class="form-group col-md-6">
-                    <label>Code</label>
-                    <InputText class="form-control"
-                               @bind-Value="department.Code"
-                               placeholder="Enter department code" />
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Code <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="department.Code"
+                                  Placeholder="Enter department code"
+                                  For="@(() => department.Code)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => department.Code)" />
-                </div>
+                </MudItem>
 
-                <!-- Name -->
-                <div class="form-group col-md-6">
-                    <label>Name</label>
-                    <InputText class="form-control"
-                               @bind-Value="department.Name"
-                               placeholder="Enter department name" />
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="department.Name"
+                                  Placeholder="Enter department name"
+                                  For="@(() => department.Name)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => department.Name)" />
-                </div>
+                </MudItem>
 
-            </div>
+            </MudGrid>
 
             <div class="mt-4">
                 <MudStack Row Justify="Justify.SpaceBetween">
@@ -75,9 +76,7 @@
 </div>
 
 @code {
-    private MudForm form;
     private Department department = new();
-
     private string? UserId;
 
     protected override async Task OnInitializedAsync()
@@ -103,16 +102,13 @@
 
             Snackbar.Add("Department Created Successfully", Severity.Success);
 
-await Task.Delay(300); // allow UI to render snackbar
+            await Task.Delay(300);
 
-navigation.NavigateTo("/departments?created=true");        }
+            navigation.NavigateTo("/departments?created=true");
+        }
         catch (Exception ex)
         {
             Snackbar.Add($"Error: {ex.Message}", Severity.Error);
         }
     }
-
-
-    private void BackToList()
-        => navigation.NavigateTo("/departments");
 }

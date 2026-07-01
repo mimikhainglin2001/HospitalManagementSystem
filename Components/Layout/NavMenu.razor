@@ -1,123 +1,144 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using MudBlazor
+@using Microsoft.AspNetCore.Components.Authorization
 
-<div class="sidebar-panel" id="sidebar-panel">
+<div class="sidebar-panel @(_collapsed ? "collapsed" : "")">
     <div class="sidebar-top">
         <div class="brand">
-            <div class="brand-icon">H</div>
+            <MudIcon Icon="@Icons.Material.Filled.LocalHospital" Class="brand-icon" />
             <span class="brand-label">HMS</span>
         </div>
-        <button class="hamburger-btn" onclick="toggleSidebar()" title="Toggle sidebar">
-            <span class="bi bi-list"></span>
-        </button> 
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" OnClick="ToggleSidebar" Class="hamburger-btn" />
     </div>
- 
+
     <div class="nav-scrollable">
-        <nav class="sidebar-nav">
+        <MudNavMenu Class="sidebar-nav">
 
             <div class="section-label">Main</div>
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill nav-icon"></span>
+            <MudNavLink Href="" Match="NavLinkMatch.All" Class="nav-link">
+                <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="nav-icon" />
                 <span class="nav-text">Dashboard</span>
-            </NavLink>
-<div class="section-label">Patient</div>
-            <NavLink class="nav-link" href="/patients">
-                <span class="bi bi-hospital-fill nav-icon"></span>
+            </MudNavLink>
+
+            <div class="section-label">Patient</div>
+            <MudNavLink Href="/patients" Class="nav-link">
+                <MudIcon Icon="@Icons.Material.Filled.People" Class="nav-icon" />
                 <span class="nav-text">Patient</span>
-            </NavLink>
-            <div class="section-label">Human Resource</div>
-            <button class="nav-link nav-group-toggle" onclick="toggleGroup('hr-group', this)">
-                <span class="bi bi-people-fill nav-icon"></span>
-                <span class="nav-text">Human Resource</span>
-                <span class="bi bi-chevron-down nav-chevron"></span>
-            </button>
-            <div class="sub-nav open" id="hr-group">
-                <div class="sub-nav-item">
-                    <a class="sub-link" href="/departments">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">Departments</span>
-                    </a>
-                </div>
-                <div class="sub-nav-item">
-                    <a class="sub-link" href="/countries">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">Countries</span>
-                    </a>
-                </div>
-                <div class="sub-nav-item">
-                    <a class="sub-link" href="/users">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">System Users</span>
-                    </a>
-                </div>
-                <div class="sub-nav-item"> 
-                    <a class="sub-link" href="/employees">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">Employees</span>
-                    </a>
-                </div>
+            </MudNavLink>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="nav-icon" />
+                <span class="nav-text">Billing</span>
             </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Person" Class="nav-icon" />
+                <span class="nav-text">OPD-Out Patient</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Bed" Class="nav-icon" />
+                <span class="nav-text">IPD-In Patient</span>
+            </div>
+
+            <div class="section-label">All Appointments</div>
+            <MudNavGroup Title="Appointments" Icon="@Icons.Material.Filled.CalendarMonth" Class="nav-group">
+                <MudNavLink Href="/appointments" Class="sub-link">
+                    <span class="nav-text">Appointments</span>
+                </MudNavLink>
+                <MudNavLink Href="/appointmentslots" Class="sub-link">
+                    <span class="nav-text">Appointment Slots</span>
+                </MudNavLink>
+            </MudNavGroup>
+
+            <div class="section-label">Pharmacy</div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Medication" Class="nav-icon" />
+                <span class="nav-text">Pharmacy</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.MedicalServices" Class="nav-icon" />
+                <span class="nav-text">Radiology</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Bloodtype" Class="nav-icon" />
+                <span class="nav-text">Blood Bank</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Emergency" Class="nav-icon" />
+                <span class="nav-text">Ambulance</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Desk" Class="nav-icon" />
+                <span class="nav-text">Front Office</span>
+            </div>
+            <div class="nav-link disabled-item">
+                <MudIcon Icon="@Icons.Material.Filled.Assignment" Class="nav-icon" />
+                <span class="nav-text">Duty Roster</span>
+            </div>
+
+            <div class="section-label">Human Resource</div>
+            <MudNavGroup Title="Human Resource" Icon="@Icons.Material.Filled.Group" Class="nav-group">
+                <MudNavLink Href="/departments" Class="sub-link">
+                    <span class="nav-text">Departments</span>
+                </MudNavLink>
+                <MudNavLink Href="/countries" Class="sub-link">
+                    <span class="nav-text">Countries</span>
+                </MudNavLink>
+                <MudNavLink Href="/users" Class="sub-link">
+                    <span class="nav-text">System Users</span>
+                </MudNavLink>
+                <MudNavLink Href="/employees" Class="sub-link">
+                    <span class="nav-text">Employees</span>
+                </MudNavLink>
+            </MudNavGroup>
 
             <div class="section-label">System Security</div>
-            <button class="nav-link nav-group-toggle" onclick="toggleGroup('sec-group', this)">
-                <span class="bi bi-shield-lock-fill nav-icon"></span>
-                <span class="nav-text">System Security</span>
-                <span class="bi bi-chevron-down nav-chevron"></span>
-            </button>
-            <div class="sub-nav" id="sec-group">
-                <div class="sub-nav-item">
-                    <a class="sub-link" href="/systemcodes">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">System Codes</span>
-                    </a>
-                </div>
-                <div class="sub-nav-item">
-                    <a class="sub-link" href="/systemcodedetails">
-                        <span class="sub-dot"></span>
-                        <span class="sub-text">System Code Details</span>
-                    </a>
-                </div>
-            </div>
+            <MudNavGroup Title="System Security" Icon="@Icons.Material.Filled.Security" Class="nav-group">
+                <MudNavLink Href="/systemcodes" Class="sub-link">
+                    <span class="nav-text">System Codes</span>
+                </MudNavLink>
+                <MudNavLink Href="/systemcodedetails" Class="sub-link">
+                    <span class="nav-text">System Code Details</span>
+                </MudNavLink>
+            </MudNavGroup>
 
-        </nav>
+        </MudNavMenu>
     </div>
 
     <div class="sidebar-footer">
         <AuthorizeView>
             <Authorized>
                 <div class="user-row">
-                    <div class="user-avatar">
-                        @(context.User.Identity?.Name?.Length >= 2
-                            ? context.User.Identity.Name.Substring(0, 2).ToUpper()
-                            : "U")
-                    </div>
+                    <MudAvatar Color="Color.Error" Size="Size.Small">@GetInitials(context.User.Identity?.Name)</MudAvatar>
                     <div class="user-info">
                         <div class="user-name">@context.User.Identity?.Name</div>
-                        <div class="user-role">HR Manager</div>
+                        <div class="user-role">Administrator</div>
                     </div>
                 </div>
-                <a class="logout-link" href="/Identity/Account/Login">
-                    <span class="bi bi-box-arrow-right"></span>
+                <MudNavLink Href="/Identity/Account/Logout" Class="logout-link">
+                    <MudIcon Icon="@Icons.Material.Filled.Logout" />
                     <span class="nav-text">Logout</span>
-                </a>
+                </MudNavLink>
             </Authorized>
             <NotAuthorized>
-                <a class="logout-link" href="/Identity/Account/Login">
-                    <span class="bi bi-box-arrow-in-right"></span>
+                <MudNavLink Href="/Identity/Account/Login" Class="logout-link">
+                    <MudIcon Icon="@Icons.Material.Filled.Login" />
                     <span class="nav-text">Login</span>
-                </a>
+                </MudNavLink>
             </NotAuthorized>
         </AuthorizeView>
     </div>
 </div>
 
-<script>
-    function toggleSidebar() {
-        document.getElementById('sidebar-panel').classList.toggle('collapsed');
+@code {
+    private bool _collapsed;
+
+    private void ToggleSidebar()
+    {
+        _collapsed = !_collapsed;
     }
-    function toggleGroup(id, el) {
-        var sub = document.getElementById(id);
-        var isOpen = sub.classList.contains('open');
-        sub.classList.toggle('open', !isOpen);
-        el.classList.toggle('open', !isOpen);
+
+    private static string GetInitials(string? name)
+    {
+        if (!string.IsNullOrEmpty(name) && name.Length >= 2)
+            return name[..2].ToUpper();
+        return "U";
     }
-</script>
+}

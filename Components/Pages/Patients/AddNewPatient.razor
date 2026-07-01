@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
@@ -18,119 +19,145 @@
     <MudPaper Elevation="15" Class="p-4">
 
         <EditForm Model="patient" OnValidSubmit="CreateNewPatient" FormName="addpatient">
+
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
-            <div class="row">
+            <h3>Add New Patient</h3>
 
-                <div class="col-md-12">
-                    <h3>Add New Patient</h3>
-                </div>
+            <MudGrid>
 
-                @* <div class="form-group col-md-4">
-                    <label>Patient No</label>
-                    <InputText class="form-control" @bind-Value="patient.PatientNo" />
-                </div> *@
-
-                <div class="form-group col-md-4">
-                    <label>First Name</label>
-                    <InputText class="form-control" @bind-Value="patient.FirstName" />
+                <MudItem xs="12" sm="6" md="4">
+                    <label>First Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="patient.FirstName"
+                                  For="@(() => patient.FirstName)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => patient.FirstName)" />
-                </div>
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Middle Name</label>
-                    <InputText class="form-control" @bind-Value="patient.MiddleName" />
-                </div>
+                    <MudTextField @bind-Value="patient.MiddleName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
-                    <label>Last Name</label>
-                    <InputText class="form-control" @bind-Value="patient.LastName" />
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Last Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="patient.LastName"
+                                  For="@(() => patient.LastName)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => patient.LastName)" />
-                </div>
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Phone Number</label>
-                    <InputText class="form-control" @bind-Value="patient.PhoneNumber" />
-                </div>
+                    <MudTextField @bind-Value="patient.PhoneNumber"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>ID Number</label>
-                    <InputText class="form-control" @bind-Value="patient.IdNumber" />
-                </div>
+                    <MudTextField @bind-Value="patient.IdNumber"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Email Address</label>
-                    <InputText class="form-control" @bind-Value="patient.EmailAddress" />
-                </div>
+                    <MudTextField @bind-Value="patient.EmailAddress"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Date Of Birth</label>
-                    <InputDate class="form-control" @bind-Value="patient.DateOfBirth" />
-                </div>
+                    <MudTextField @bind-Value="dateOfBirth"
+                                  InputType="InputType.Date"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <!-- Gender -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Gender</label>
-                    <InputSelect class="form-control" @bind-Value="patient.GenderId">
-                        <option value="">Select Gender</option>
+                    <MudSelect @bind-Value="selectedGenderId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select gender">
                         @foreach (var g in Genders)
                         {
-                            <option value="@g.Id">@g.Description</option>
+                            <MudSelectItem Value="@((int?)g.Id)">@g.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Blood Group -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Blood Group</label>
-                    <InputSelect class="form-control" @bind-Value="patient.BloodGroupId">
-                        <option value="">Select Blood Group</option>
+                    <MudSelect @bind-Value="selectedBloodGroupId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select blood group">
                         @foreach (var b in BloodGroups)
                         {
-                            <option value="@b.Id">@b.Description</option>
+                            <MudSelectItem Value="@((int?)b.Id)">@b.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Marital Status -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Marital Status</label>
-                    <InputSelect class="form-control" @bind-Value="patient.MaritalStatusId">
-                        <option value="">Select Marital Status</option>
+                    <MudSelect @bind-Value="patient.MaritalStatusId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select marital status">
                         @foreach (var m in MAS)
                         {
-                            <option value="@m.Id">@m.Description</option>
+                            <MudSelectItem Value="@((int?)m.Id)">@m.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="6">
                     <label>Guardian Name</label>
-                    <InputText class="form-control" @bind-Value="patient.GuardianName" />
-                </div>
+                    <MudTextField @bind-Value="patient.GuardianName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="6">
                     <label>Guardian Phone</label>
-                    <InputText class="form-control" @bind-Value="patient.GuardianPhoneNumber" />
-                </div>
+                    <MudTextField @bind-Value="patient.GuardianPhoneNumber"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-12">
+                <MudItem xs="12" md="12">
                     <label>Address</label>
-                    <InputText class="form-control" @bind-Value="patient.Address" />
-                </div>
+                    <MudTextField @bind-Value="patient.Address"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="6">
                     <label>Remarks</label>
-                    <InputText class="form-control" @bind-Value="patient.Remarks" />
-                </div>
+                    <MudTextField @bind-Value="patient.Remarks"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="6">
                     <label>Allergies</label>
-                    <InputText class="form-control" @bind-Value="patient.Allergies" />
-                </div>
+                    <MudTextField @bind-Value="patient.Allergies"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-            </div>
+            </MudGrid>
 
             <div class="mt-4">
                 <MudStack Row Justify="Justify.SpaceBetween">
@@ -160,6 +187,9 @@
 @code {
 
     public Patient patient { get; set; } = new();
+    private DateTime? dateOfBirth;
+    private int? selectedGenderId;
+    private int? selectedBloodGroupId;
 
     public List<SystemCodeDetail> AllSystemCodeDetails = new();
     public List<SystemCodeDetail> Genders = new();
@@ -194,7 +224,6 @@
             MAS = AllSystemCodeDetails
                 .Where(d => d.SystemCode?.Code?.Contains("MAS", StringComparison.OrdinalIgnoreCase) == true)
                 .ToList();
- 
         }
         catch (Exception ex)
         {
@@ -206,6 +235,13 @@
     {
         try
         {
+            if (dateOfBirth.HasValue)
+                patient.DateOfBirth = dateOfBirth.Value;
+            if (selectedGenderId.HasValue)
+                patient.GenderId = selectedGenderId.Value;
+            if (selectedBloodGroupId.HasValue)
+                patient.BloodGroupId = selectedBloodGroupId.Value;
+
             patient.CreatedOn = DateTime.UtcNow;
             patient.CreatedById = UserId;
             patient.ModifiedOn = DateTime.UtcNow;
@@ -226,10 +262,8 @@
         }
     }
 
-
-	public void BackToList()
-	{
-		navigation.NavigateTo("/patients");
-	}
+    public void BackToList()
+    {
+        navigation.NavigateTo("/patients");
+    }
 }
-

@@ -7,6 +7,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager navigation
+@inject ISnackbar Snackbar
 @attribute [Authorize]
 @attribute [StreamRendering]
 @using MudBlazor 
@@ -95,9 +96,19 @@
     {
         systemUser = await userService.GetUserByIdAsync(id) ?? new();
     }
-    private async void Delete(string id)
+    private async Task Delete(string id)
     {
-        systemUser = await userService.DeleteUserAsync(id) ?? new();
+        try
+        {
+            await userService.DeleteUserAsync(id);
+            Snackbar.Add("User deleted successfully", Severity.Success);
+            SystemUsersList = await GetAllSystemUsers();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
     }
     private bool Search(ApplicationUser user)
     {

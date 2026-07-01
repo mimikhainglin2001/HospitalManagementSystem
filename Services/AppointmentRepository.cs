@@ -48,8 +48,12 @@ namespace HospitalManagementSystem.Services
 
         public async Task<Appointment> AddAppointmentAsync(Appointment appointment)
         {
+            var activeStatus = await _context.SystemCodeDetails
+            .Include(s => s.SystemCode)
+            .FirstOrDefaultAsync(s => s.SystemCode.Code == "AppointmentSlotStatus" && s.Code == "Active");
             appointment.AppointmentNo = await _numberseries.GenerateAppointmentNumberAsync();
             appointment.CreatedOn = DateTime.UtcNow;
+            appointment.StatusId = activeStatus.Id;
             await _context.Appointments.AddAsync(appointment);
             await _context.SaveChangesAsync();
             return appointment;

@@ -1,0 +1,198 @@
+@page "/adduser"
+@rendermode InteractiveServer
+
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
+
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
+
+        <EditForm Model="@user"
+                  OnValidSubmit="@CreateNewUser"
+                  FormName="adduser">
+
+            <DataAnnotationsValidator />
+
+            <h3>Add New User</h3>
+
+            <MudGrid>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>First Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="user.FirstName"
+                                  Placeholder="Enter first name"
+                                  For="@(() => user.FirstName)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                    <ValidationMessage For="@(() => user.FirstName)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Last Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="user.LastName"
+                                  Placeholder="Enter last name"
+                                  For="@(() => user.LastName)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                    <ValidationMessage For="@(() => user.LastName)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>User Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="user.UserName"
+                                  Placeholder="Enter user name"
+                                  For="@(() => user.UserName)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                    <ValidationMessage For="@(() => user.UserName)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Email <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="user.Email"
+                                  Placeholder="Enter email address"
+                                  For="@(() => user.Email)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                    <ValidationMessage For="@(() => user.Email)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Phone Number</label>
+                    <MudTextField @bind-Value="user.PhoneNumber"
+                                  Placeholder="Enter phone number"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Password <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="user.PasswordHash"
+                                  Placeholder="Enter password"
+                                  InputType="InputType.Password"
+                                  For="@(() => user.PasswordHash)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                    <ValidationMessage For="@(() => user.PasswordHash)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Address</label>
+                    <MudTextField @bind-Value="user.Address"
+                                  Placeholder="Enter address"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Emergency Phone Number</label>
+                    <MudTextField @bind-Value="user.EmergencyPhoneNumber"
+                                  Placeholder="Enter emergency phone number"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Date Of Birth</label>
+                    <MudTextField @bind-Value="dateOfBirth"
+                                  InputType="InputType.Date"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Father Name</label>
+                    <MudTextField @bind-Value="user.FatherName"
+                                  Placeholder="Enter father name"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>Mother Name</label>
+                    <MudTextField @bind-Value="user.MotherName"
+                                  Placeholder="Enter mother name"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
+                    <label>National Id Number</label>
+                    <MudTextField @bind-Value="user.NationalIdNumber"
+                                  Placeholder="Enter national ID number"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+            </MudGrid>
+
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
+                    <MudButton Href="/users"
+                               Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.ArrowBack">
+                        Back To List
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save User
+                    </MudButton>
+
+                </MudStack>
+            </div>
+
+        </EditForm>
+
+    </MudPaper>
+</div>
+
+@code {
+    private ApplicationUser user = new();
+    private DateTime? dateOfBirth;
+    private string? UserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var currentUser = await userManager.GetUserAsync(authState.User);
+        UserId = currentUser?.Id;
+    }
+
+    protected async Task CreateNewUser()
+    {
+        try
+        {
+            if (dateOfBirth.HasValue)
+                user.DateOfBirth = dateOfBirth.Value;
+
+            await userService.AddUserAsync(user);
+
+            Snackbar.Add("User Created Successfully", Severity.Success);
+
+            await Task.Delay(300);
+
+            navigation.NavigateTo("/users?created=true");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+    }
+}

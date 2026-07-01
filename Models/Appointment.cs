@@ -27,8 +27,8 @@ public class AppointmentSlot : UserCreateActivity
     public Employee Doctor { get; set; }
     public int ShiftId { get; set; }
     public SystemCodeDetail Shift { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public TimeOnly StartTime { get; set; }
+    public TimeOnly EndTime { get; set; }
     public int StatusId { get; set; }
     public SystemCodeDetail Status { get; set; }
 }

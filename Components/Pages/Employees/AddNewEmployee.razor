@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> userManager
@@ -14,170 +15,212 @@
 @inject ISnackbar Snackbar
 
 @attribute [Authorize]
-@using MudBlazor
 
 <div class="mx-2">
     <MudPaper Elevation="15" Class="p-4">
 
         <EditForm Model="employee" OnValidSubmit="CreateOrUpdateEmployee" FormName="addemployee">
+
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
-            <div class="row">
+            <h3>@(Id.HasValue ? "Update Employee" : "Add New Employee")</h3>
 
-                <div class="col-md-12">
-                    <h3>@(Id.HasValue ? "Update Employee" : "Add New Employee")</h3>
-                </div>
+            <MudGrid>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Employee No</label>
-                    <InputText class="form-control" @bind-Value="employee.EmployeeNo" />
-                </div>
+                    <MudTextField @bind-Value="employee.EmployeeNo"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>First Name</label>
-                    <InputText class="form-control" @bind-Value="employee.FirstName" />
-                </div>
-                <div class="form-group col-md-4">
+                    <MudTextField @bind-Value="employee.FirstName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
                     <label>Middle Name</label>
-                    <InputText class="form-control" @bind-Value="employee.MiddleName" />
-                </div>
-                <div class="form-group col-md-4">
+                    <MudTextField @bind-Value="employee.MiddleName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="4">
                     <label>Last Name</label>
-                    <InputText class="form-control" @bind-Value="employee.LastName" />
-                </div>
+                    <MudTextField @bind-Value="employee.LastName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Email</label>
-                    <InputText class="form-control" @bind-Value="employee.EmailAddress" />
-                </div>
+                    <MudTextField @bind-Value="employee.EmailAddress"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Phone</label>
-                    <InputText class="form-control" @bind-Value="employee.PhoneNumber" />
-                </div>
+                    <MudTextField @bind-Value="employee.PhoneNumber"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Date of Birth</label>
-                    <InputDate class="form-control" @bind-Value="employee.DateOfBirth" />
-                </div>
+                    <MudTextField @bind-Value="dateOfBirth"
+                                  InputType="InputType.Date"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Date of Joining</label>
-                    <InputDate class="form-control" @bind-Value="employee.DateOfJoining" />
-                </div>
+                    <MudTextField @bind-Value="dateOfJoining"
+                                  InputType="InputType.Date"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-4">
-                    <label>ID Number</label>
-                    <InputText class="form-control" @bind-Value="employee.IdNumber" />
+                <MudItem xs="12" sm="6" md="4">
+                    <label>ID Number <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="employee.IdNumber"
+                                  For="@(() => employee.IdNumber)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
                     <ValidationMessage For="@(() => employee.IdNumber)" />
-                </div>
+                </MudItem>
 
-                <!-- Department -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Department</label>
-                    <InputSelect class="form-control" @bind-Value="employee.DepartmentId">
-                        <option value="0">Select Department</option>
+                    <MudSelect @bind-Value="employee.DepartmentId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select department">
                         @foreach (var d in Departments)
                         {
-                            <option value="@d.Id">@d.Name</option>
+                            <MudSelectItem Value="@((int?)d.Id)">@d.Name</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Role -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Role</label>
-                    <InputSelect class="form-control" @bind-Value="employee.RoleId">
-                        <option value="0">Select Role</option>
+                    <MudSelect @bind-Value="employee.RoleId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select role">
                         @foreach (var r in Roles)
                         {
-                            <option value="@r.Id">@r.Description</option>
+                            <MudSelectItem Value="@((int?)r.Id)">@r.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Designation -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Designation</label>
-                    <InputSelect class="form-control" @bind-Value="employee.DesignationId">
-                        <option value="0">Select Designation</option>
+                    <MudSelect @bind-Value="employee.DesignationId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select designation">
                         @foreach (var d in Designations)
                         {
-                            <option value="@d.Id">@d.Description</option>
+                            <MudSelectItem Value="@((int?)d.Id)">@d.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Specialist -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Specialist</label>
-                    <InputSelect class="form-control" @bind-Value="employee.SpecialistId">
-                        <option value="0">Select Specialist</option>
+                    <MudSelect @bind-Value="employee.SpecialistId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select specialist">
                         @foreach (var s in Specialities)
                         {
-                            <option value="@s.Id">@s.Description</option>
+                            <MudSelectItem Value="@((int?)s.Id)">@s.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Gender -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Gender</label>
-                    <InputSelect class="form-control" @bind-Value="employee.GenderId">
-                        <option value="0">Select Gender</option>
+                    <MudSelect @bind-Value="employee.GenderId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select gender">
                         @foreach (var g in Genders)
                         {
-                            <option value="@g.Id">@g.Description</option>
+                            <MudSelectItem Value="@((int?)g.Id)">@g.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Blood Group -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Blood Group</label>
-                    <InputSelect class="form-control" @bind-Value="employee.BloodGroupId">
-                        <option value="0">Select Blood Group</option>
+                    <MudSelect @bind-Value="employee.BloodGroupId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select blood group">
                         @foreach (var b in BloodGroups)
                         {
-                            <option value="@b.Id">@b.Description</option>
+                            <MudSelectItem Value="@((int?)b.Id)">@b.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <!-- Marital Status -->
-                <div class="form-group col-md-4">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Marital Status</label>
-                    <InputSelect class="form-control" @bind-Value="employee.MaritalStatusId">
-                        <option value="0">Select Marital Status</option>
+                    <MudSelect @bind-Value="employee.MaritalStatusId"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               T="int?"
+                               Placeholder="Select marital status">
                         @foreach (var m in MAS)
                         {
-                            <option value="@m.Id">@m.Description</option>
+                            <MudSelectItem Value="@((int?)m.Id)">@m.Description</MudSelectItem>
                         }
-                    </InputSelect>
-                </div>
+                    </MudSelect>
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Father Name</label>
-                    <InputText class="form-control" @bind-Value="employee.FatherName" />
-                </div>
+                    <MudTextField @bind-Value="employee.FatherName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-6">
+                <MudItem xs="12" sm="6" md="4">
                     <label>Mother Name</label>
-                    <InputText class="form-control" @bind-Value="employee.MotherName" />
-                </div>
+                    <MudTextField @bind-Value="employee.MotherName"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-            </div>
+            </MudGrid>
 
             <div class="mt-4">
                 <MudStack Row Justify="Justify.SpaceBetween">
 
-                    <MudButton Href="/employees" Variant="Variant.Filled" Color="Color.Warning"
+                    <MudButton Href="/employees"
+                               Variant="Variant.Filled"
+                               Color="Color.Warning"
                                StartIcon="@Icons.Material.Filled.ArrowBack">
                         Back To List
                     </MudButton>
 
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Save">
                         @(Id.HasValue ? "Update Employee" : "Save Employee")
                     </MudButton>
@@ -195,6 +238,8 @@
     [Parameter] public int? Id { get; set; }
 
     private Employee employee = new();
+    private DateTime? dateOfBirth;
+    private DateTime? dateOfJoining;
     private string? UserId;
 
     private List<Department> Departments = new();
@@ -221,6 +266,8 @@
         if (Id.HasValue)
         {
             employee = await employeeService.GetEmployeeByIdAsync(Id.Value) ?? new();
+            dateOfBirth = employee.DateOfBirth;
+            dateOfJoining = employee.DateOfJoining;
         }
     }
 
@@ -249,6 +296,10 @@
     {
         try
         {
+            if (dateOfBirth.HasValue)
+                employee.DateOfBirth = dateOfBirth.Value;
+            if (dateOfJoining.HasValue)
+                employee.DateOfJoining = dateOfJoining.Value;
 
             if (Id.HasValue)
             {

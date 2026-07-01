@@ -1,0 +1,176 @@
+@page "/addappointmentslot"
+@rendermode InteractiveServer
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
+
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+
+<div class="mx-2">
+    <MudPaper Elevation="15" Class="p-4">
+
+        <EditForm Model="@appointmentslot"
+                  OnValidSubmit="@CreateNewAppointmentSlot"
+                  FormName="addappointmentslot">
+
+            <DataAnnotationsValidator />
+
+            <h3>Add New Appointment Slot</h3>
+
+            <MudGrid>
+
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Doctor <span class="text-danger">*</span></label>
+                    <MudSelect @bind-Value="selectedDoctorId"
+                               T="int?"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               Placeholder="Select Doctor">
+                        @foreach (var doctor in doctors)
+                        {
+                            <MudSelectItem Value="@((int?)doctor.Id)">@($"{doctor.FirstName} {doctor.LastName}")</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <ValidationMessage For="@(() => appointmentslot.DoctorId)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Shift <span class="text-danger">*</span></label>
+                    <MudSelect @bind-Value="selectedShiftId"
+                               T="int?"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               Placeholder="Select shift">
+                        @foreach (var shift in shifts)
+                        {
+                            <MudSelectItem Value="@((int?)shift.Id)">@shift.Description</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <ValidationMessage For="@(() => appointmentslot.ShiftId)" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Start Time <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="selectedStartTime"
+                                  InputType="InputType.Time"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                <MudItem xs="12" sm="6" md="6">
+                    <label>End Time <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="selectedEndTime"
+                                  InputType="InputType.Time"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
+
+                @* <MudItem xs="12" sm="6" md="6">
+                    <label>Status <span class="text-danger">*</span></label>
+                    <MudSelect @bind-Value="selectedStatusId"
+                               T="int?"
+                               Variant="Variant.Outlined"
+                               FullWidth="@true"
+                               Placeholder="Select status">
+                        @foreach (var status in statuses)
+                        {
+                            <MudSelectItem Value="@((int?)status.Id)">@status.Description</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <ValidationMessage For="@(() => appointmentslot.StatusId)" />
+                </MudItem> *@
+
+            </MudGrid>
+
+            <div class="mt-4">
+                <MudStack Row Justify="Justify.SpaceBetween">
+
+                    <MudButton Href="/appointmentslots"
+                               Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.ArrowBack">
+                        Back To List
+                    </MudButton>
+
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save">
+                        Save Appointment Slot
+                    </MudButton>
+
+                </MudStack>
+            </div>
+
+        </EditForm>
+
+    </MudPaper>
+</div>
+
+@code {
+    private AppointmentSlot appointmentslot = new();
+    private int? selectedDoctorId;
+    private int? selectedShiftId;
+    private TimeSpan? selectedStartTime;
+    private TimeSpan? selectedEndTime;
+    private string? UserId;
+    private List<Employee> doctors = new();
+    private List<SystemCodeDetail> shifts = new();
+    private int _defaultStatusId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        doctors = await employeeService.GetEmployeesAsync() ?? new();
+        shifts = await systemCodeDetailsService.GetSystemCodeDetailsByCodeAsync("SHIFT") ?? new();
+        _defaultStatusId = shifts.FirstOrDefault()?.Id ?? 1;
+    }
+
+    protected async Task CreateNewAppointmentSlot()
+    {
+        try
+        {
+            if (selectedDoctorId.HasValue)
+                appointmentslot.DoctorId = selectedDoctorId.Value;
+            if (selectedShiftId.HasValue)
+                appointmentslot.ShiftId = selectedShiftId.Value;
+            if (selectedStartTime.HasValue)
+                appointmentslot.StartTime = TimeOnly.FromTimeSpan(selectedStartTime.Value);
+            if (selectedEndTime.HasValue)
+                appointmentslot.EndTime = TimeOnly.FromTimeSpan(selectedEndTime.Value);
+            appointmentslot.StatusId = _defaultStatusId;
+
+            appointmentslot.CreatedOn = DateTime.UtcNow;
+            appointmentslot.CreatedById = UserId;
+
+            await appointmentslotService.AddAppointmentSlotAsync(appointmentslot);
+
+            Snackbar.Add("Appointment Slot Created Successfully", Severity.Success);
+
+            await Task.Delay(300);
+
+            navigation.NavigateTo("/appointmentslots?created=true");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.InnerException?.Message ?? ex.Message}", Severity.Error);
+        }
+    }
+}

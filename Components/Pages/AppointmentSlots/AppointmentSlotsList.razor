@@ -1,0 +1,135 @@
+@page "/appointmentslots"
+@rendermode InteractiveServer
+@using HospitalManagementSystem.Data
+@using HospitalManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject ISnackbar Snackbar
+
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+@attribute [StreamRendering]
+@using MudBlazor
+
+
+<MudCard Elevation="3">
+
+    <MudCardHeader>
+        <MudSpacer />
+        <MudButton Href="/addappointmentslot" Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add">
+            Add Appointment Slot
+        </MudButton>
+    </MudCardHeader>
+
+    <MudDivider />
+
+    <MudTable Elevation="25" Items="appointmentslots" Filter="new Func<AppointmentSlot, bool>(Search)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Appointment Slots List</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchstring" Placeholder="Search..." Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Doctor</MudTh>
+            <MudTh>Shift Name</MudTh>
+            <MudTh>Start Time</MudTh>
+            <MudTh>End Time</MudTh>
+            <MudTh>Created By</MudTh>
+            <MudTh>Created On</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Doctor">@($"{context.Doctor?.FirstName} {context.Doctor?.LastName}")</MudTd>
+            <MudTd DataLabel="ShiftName">@context.Shift?.Description</MudTd>
+            <MudTd DataLabel="StartTime">@context.StartTime.ToString("HH:mm")</MudTd>
+            <MudTd DataLabel="EndTime">@context.EndTime.ToString("HH:mm")</MudTd>
+            <MudTd DataLabel="CreatedBy">@context.CreatedBy?.FullName</MudTd>
+            <MudTd DataLabel="CreatedOn">@context.CreatedOn.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd DataLabel="Actions">
+
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small"
+                               OnClick="@(() => Edit(context.Id))" />
+
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small"
+                               OnClick="@(() => Delete(context.Id))" />
+
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+
+</MudCard>
+
+@code {
+
+    public string searchstring = "";
+    public AppointmentSlot appointmentslot = new();
+    private List<AppointmentSlot> appointmentslots { get; set; } = new();
+    private string? UserId;
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = navigation.ToAbsoluteUri(navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (query["created"] == "true")
+            Snackbar.Add("Appointment Slot Created Successfully", Severity.Success);
+
+        if (query["deleted"] == "true")
+            Snackbar.Add("Appointment Slot Deleted Successfully", Severity.Success);
+
+        if (query["updated"] == "true")
+            Snackbar.Add("Appointment Slot Updated Successfully", Severity.Success);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await userManager.GetUserAsync(user);
+            UserId = currentUser?.Id;
+        }
+
+        appointmentslots =
+                    await appointmentslotService.GetAppointmentSlotsAsync() ?? new();
+    }
+
+    private async Task<List<AppointmentSlot>> GetAllAppointmentSlots()
+    {
+        appointmentslots = await appointmentslotService.GetAppointmentSlotsAsync() ?? new();
+        return appointmentslots;
+    }
+    private async void Edit(int id)
+    {
+        appointmentslot = await appointmentslotService.GetAppointmentSlotByIdAsync(id) ?? new();
+    }
+    private async Task Delete(int id)
+    {
+        appointmentslot = await appointmentslotService.DeleteAppointmentSlotAsync(id) ?? new();
+
+        Snackbar.Add("Appointment Slot Deleted Successfully", Severity.Success);
+
+        appointmentslots = await GetAllAppointmentSlots();
+
+        StateHasChanged();
+    }
+
+    private bool Search(AppointmentSlot s)
+    {
+        if (s.Doctor != null)
+        {
+            var doctorName = $"{s.Doctor.FirstName} {s.Doctor.LastName}";
+            if (doctorName.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        if (s.Shift != null && s.Shift.Description.Contains(searchstring, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+}

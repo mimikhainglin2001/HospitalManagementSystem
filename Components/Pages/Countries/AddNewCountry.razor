@@ -23,27 +23,30 @@
                   FormName="addcountry">
 
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
             <h3>Add New Country</h3>
 
-            <div class="row">
+            <MudGrid>
 
-                <div class="form-group col-md-6">
-                    <label>Code</label>
-                    <InputText class="form-control"
-                               @bind-Value="country.Code"
-                               placeholder="Enter country code" />
-                </div>
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Code <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="country.Code"
+                                  Placeholder="Enter country code"
+                                  For="@(() => country.Code)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-                <div class="form-group col-md-6">
-                    <label>Name</label>
-                    <InputText class="form-control"
-                               @bind-Value="country.Name"
-                               placeholder="Enter country name" />
-                </div>
+                <MudItem xs="12" sm="6" md="6">
+                    <label>Name <span class="text-danger">*</span></label>
+                    <MudTextField @bind-Value="country.Name"
+                                  Placeholder="Enter country name"
+                                  For="@(() => country.Name)"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="@true" />
+                </MudItem>
 
-            </div>
+            </MudGrid>
 
             <div class="mt-4">
                 <MudStack Row Justify="Justify.SpaceBetween">
@@ -97,4 +100,4 @@
 
         navigation.NavigateTo("/countries?created=true");
     }
-    }
+}
